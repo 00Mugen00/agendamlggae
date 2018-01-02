@@ -1,0 +1,15 @@
+@media (min-width: 768px) {
+    textarea {
+        min-height: 200px;
+    }
+}
+
+.vista-previa {
+    a {
+        margin-bottom: 15px;
+    }
+
+    .collapse.show, .collapsing {
+        margin-bottom: 15px;
+    }
+}

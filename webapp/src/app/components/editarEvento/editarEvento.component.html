@@ -1,0 +1,76 @@
+<app-mostrarError [errorResponse]="errorResponse"></app-mostrarError>
+<header><h2>Editando un evento</h2></header>
+<form #formulario="ngForm">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="tipo">Tipo</label>
+            <select id="tipo" class="form-control" name="tipo" [(ngModel)]="evento.tipo" required>
+                <option [value]="1">Una vez</option>
+                <option [value]="2">Recurrente</option>
+                <option [value]="3">Persistente</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="fecha">Fecha</label>
+            <owl-date-time [(ngModel)]="fecha" inputStyleClass="form-control" id="fecha" name="fecha" required></owl-date-time>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="categorias">Categorias</label>
+            <select multiple id="categorias" class="form-control" [(ngModel)]="categoriasEvento" name="categorias" required>
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                    {{ categoria.nombre }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" class="form-control" required max="45" placeholder="Título del evento" name="nombre" [(ngModel)]="evento.nombre"/>
+    </div>
+
+    <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea
+                id="descripcion"
+                class="form-control"
+                required maxlength="16000000"
+                placeholder="Pon una descripción del evento"
+                name="descripcion"
+                [(ngModel)]="evento.descripcion"></textarea>
+    </div>
+
+    <div class="vista-previa">
+        <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseMarkdown" aria-expanded="false" aria-controls="collapseMarkdown">
+            Mostrar/Ocultar vista previa de descripción
+        </a>
+        <div class="collapse" id="collapseMarkdown">
+            <div class="card card-body" [innerHTML]="evento.descripcion | md"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input id="direccion" class="form-control" required max="250" placeholder="Dirección del evento" name="direccion" [(ngModel)]="evento.direccion" />
+    </div>
+
+    <mapa-desde-direccion [direccion]="evento.direccion"></mapa-desde-direccion>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="precio">Precio <small>(opcional)</small></label>
+            <div class="input-group">
+                <input type="number" class="form-control" id="precio" min="0" step="0.01" name="precio" [(ngModel)]="evento.precio" />
+                <div class="input-group-addon">€</div>
+            </div>
+        </div>
+        <div class="form-group col-md-8">
+            <label for="flickr">Flickr <small>(opcional)</small></label>
+            <input type="url" id="flickr" class="form-control" name="flickr"
+                   [(ngModel)]="urlFlickr" [pattern]="flickrRegexString" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" (click)="onEdit()" [disabled]="formulario.invalid">Guardar</button>
+    <button type="submit" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+</form>

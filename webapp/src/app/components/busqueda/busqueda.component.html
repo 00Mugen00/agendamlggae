@@ -1,0 +1,60 @@
+<app-mostrarError [errorResponse]="errorResponse"></app-mostrarError>
+<h2>Opciones de busqueda</h2>
+<ngForm>
+    <div class="form-group row">
+        <div class="col-sm-4 col-md-2 d-flex align-items-center">
+            <label for="texto" style="margin: 0">Filtro por título</label>
+        </div>
+        <div class="col-sm-8 col-md-10">
+            <input type="text" class="form-control" id="texto" name="texto" [(ngModel)]="texto" placeholder="Filtrar por título" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="categorias">Categorias</label>
+            <select multiple id="categorias" class="form-control" [(ngModel)]="categoriasIds" name="categorias">
+                <option *ngFor="let categoria of categorias" [value]="categoria.id">
+                    {{ categoria.nombre }}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label>
+                <input type="checkbox" [(ngModel)]="ordenarPorDistancia" name="ordenarPorDistancia" (change)="geolocalizacion()">
+                ¿Ordenar por distancia?
+            </label>
+            <div *ngIf="ordenarPorDistancia && !geolocalizando">
+                <label for="radio">Radio</label>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <input type="number" class="form-control" min="0.1" step="0.1" id="radio" [(ngModel)]="radio" name="radio">
+                    <div class="input-group-addon">Km</div>
+                </div>
+            </div>
+            <div *ngIf="ordenarPorDistancia && geolocalizando">
+                <b>Obteniendo ubicación...</b>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label>
+                <input type="checkbox" [(ngModel)]="mostrarDeMiPreferencia" name="mostrarDeMiPreferencia" [disabled]="!preferencias"> ¿Mostrar de mi preferencia?
+            </label>
+            <p class="ultimaComaFuera" *ngIf="preferencias">
+                Sus preferencias son:
+                <b *ngFor="let categoria of preferencias">
+                    {{ categoria.nombre }}<span>,</span>
+                </b>
+            </p>
+            <p class="text-muted" *ngIf="!preferencias">
+                Debe iniciar sesión para poder seleccionar sus preferencias
+            </p>
+        </div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" (click)="buscar()" [disabled]="geolocalizando && ordenarPorDistancia">Buscar</button>
+    </div>
+</ngForm>
+
+<div class="espacio"></div>
+
+<h2>Resultado de la búsqueda</h2>
+<listado-eventos [eventos]="eventos" [coordedanadasCentrado]="coordenadasGeolocalizacion"></listado-eventos>

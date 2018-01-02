@@ -1,0 +1,79 @@
+application: agendamlggae
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?.*\.bak$
+- ^(.*/)?.*\.DS_Store$
+- ^(.*/)?.*/node_modules/.*$
+- ^(webapp/node_modules/.*)
+- ^(webapp/src/.*)
+- ^(webapp/config/.*)
+- ^(webapp/*.js.*)
+
+handlers:
+- url: /agendamlg-api/.*
+  script: main.app
+
+#https://gist.github.com/darktable/873098
+- url: /(.*\.css)
+  mime_type: text/css
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.css)
+
+- url: /(.*\.eot)
+  mime_type: application/vnd.ms-fontobject
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.eot)
+
+- url: /(.*\.html)
+  mime_type: text/html
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.html)
+  expiration: "1h"
+
+- url: /(.*\.js)
+  mime_type: text/javascript
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.js)
+
+- url: /(.*\.otf)
+  mime_type: font/opentype
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.otf)
+
+- url: /(.*\.(svg|svgz))
+  mime_type: images/svg+xml
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.(svg|svgz))
+
+- url: /(.*\.ttf)
+  mime_type: font/truetype
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.ttf)
+
+- url: /(.*\.woff)
+  mime_type: application/x-font-woff
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.woff)
+
+- url: /
+  static_files: webapp/web/index.html
+  upload: webapp/web/index.html
+  expiration: "15m"
+
+# 404
+- url: /.*
+  static_files: webapp/web/index.html
+  upload: webapp/web/index.html
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
