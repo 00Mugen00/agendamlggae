@@ -49,6 +49,3 @@ class Comentario(ndb.Model):
     creador = ndb.StructuredProperty(Usuario, required=True)
     evento = ndb.StructuredProperty(Evento, required=True)
     fecha = ndb.DateTimeProperty(auto_now_add=True)
-
-
-comentario = Comentario(texto='Hola',parent=agenda_key())
