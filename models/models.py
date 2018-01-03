@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from google.appengine.ext import ndb
 
 # Nombre de la agenda, se trata del id para la clave raiz de tipo "Agenda"
@@ -5,29 +6,28 @@ from google.appengine.ext import ndb
 AGENDA_NOMBRE = 'AGENDAMLG'
 
 
-# Funcion que crea una clave raiz para las entidades,
-# de esta forma nos aseguramos que todas las entidades de la
-# agenda estan en el mismo "entity group" haciendo las consultas
-# en esta consistentes
-
-
 def agenda_key():
-    # Construye una clave de DataStore de tipo Agenda, y con id
-    # AGENDA_NOMBRE
+    """Construye una clave de DataStore de tipo Agenda, y con id
+    AGENDA_NOMBRE. Funcion que crea una clave raiz para las entidades,
+    de esta forma nos aseguramos que todas las entidades de la
+    agenda estan en el mismo "entity group" haciendo las consultas
+    en esta consistentes"""
     return ndb.Key('Agenda', AGENDA_NOMBRE)
+
 
 # Modelo categoria
 class Categoria(ndb.Model):
     nombre = ndb.StringProperty(required=True)
 
+
 # Modelo de usuario
 class Usuario(ndb.Model):
     idGoogle = ndb.StringProperty(required=True)
     tipo = ndb.IntegerProperty(required=True)
-    preferencias = ndb.StructuredProperty(Categoria,repeated=True)
+    preferencias = ndb.StructuredProperty(Categoria, repeated=True)
+
 
 # Modelo de evento
-
 class Evento(ndb.Model):
     tipo = ndb.IntegerProperty(required=True)
     nombre = ndb.StringProperty(required=True)
@@ -43,9 +43,16 @@ class Evento(ndb.Model):
     flickrAlbumId = ndb.StringProperty()
     categorias = ndb.StructuredProperty(Categoria, repeated=True)
 
+
 # Modelo comentario
 class Comentario(ndb.Model):
     texto = ndb.StringProperty()
     creador = ndb.StructuredProperty(Usuario, required=True)
     evento = ndb.StructuredProperty(Evento, required=True)
     fecha = ndb.DateTimeProperty(auto_now_add=True)
+
+
+class FlickrCache(ndb.Model):
+    url = ndb.StringProperty(required=True)
+    value = ndb.StringProperty(required=True, indexed=False)
+    created = ndb.DateTimeProperty(required=True, auto_now_add=True)

@@ -77,3 +77,5 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.2"
+- name: ujson
+  version: "1.35"
