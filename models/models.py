@@ -17,39 +17,75 @@ def agenda_key():
 
 # Modelo categoria
 class Categoria(ndb.Model):
+    """
+    La clave tiene el siguiente aspecto:
+    ('Agenda', AGENDA_NOMBRE, 'Categoria', XXX)
+
+    La categoria se crea:
+    categoria = Categoria(propiedades...,parent=agenda_key())
+    categoria.put()
+    """
+
     nombre = ndb.StringProperty(required=True)
 
 
 # Modelo de usuario
 class Usuario(ndb.Model):
+    """
+    La clave tiene el siguiente aspecto:
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX)
+
+    El usuario se crea:
+    usuario = Usuario(propiedades....,parent=agenda_key())
+    usuario.put()
+
+    Representacion de las preferencias
+    [('Agenda', AGENDA_NOMBRE, 'Categoria', 347298),('Agenda', AGENDA_NOMBRE, 'Categoria', 347298)]
+    """
+
     idGoogle = ndb.StringProperty(required=True)
     tipo = ndb.IntegerProperty(required=True)
-    preferencias = ndb.StructuredProperty(Categoria, repeated=True)
+    preferencias = ndb.KeyProperty(kind='Categoria', repeated=True)
 
 
 # Modelo de evento
 class Evento(ndb.Model):
+    """
+    La clave tiene el siguiente aspecto:
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX, 'Evento', XXX)
+
+    Dado un usuario, un evento se crea:
+    evento = Evento(propiedades..., parent=usuario.key)
+    evento.put()
+    """
+
     tipo = ndb.IntegerProperty(required=True)
     nombre = ndb.StringProperty(required=True)
-    descripcion = ndb.StringProperty(required=True)
+    descripcion = ndb.StringProperty(required=True, indexed=False)
     fecha = ndb.DateTimeProperty(auto_now_add=True, required=True)
     precio = ndb.FloatProperty()
     direccion = ndb.StringProperty(required=True)
     validado = ndb.BooleanProperty(default=False, required=True)
-    creador = ndb.StructuredProperty(Usuario, required=True)
-    latitud = ndb.FloatProperty()
-    longitud = ndb.FloatProperty()
+    coordenadas = ndb.GeoPtProperty()
     flickrUserId = ndb.StringProperty()
     flickrAlbumId = ndb.StringProperty()
-    categorias = ndb.StructuredProperty(Categoria, repeated=True)
+    categorias = ndb.KeyProperty(kind='Categoria', repeated=True)
 
 
 # Modelo comentario
 class Comentario(ndb.Model):
-    texto = ndb.StringProperty()
-    creador = ndb.StructuredProperty(Usuario, required=True)
-    evento = ndb.StructuredProperty(Evento, required=True)
+    """
+    La clave tiene el siguiente aspecto:
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX, 'Evento', XXX, 'Comentario', XXX)
+
+    El comentario se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuario la sesion inciada:
+    comentario = Comentario(propiedades..., creador=usuario.key(),parent=evento.key())
+    comentario.put()
+    """
+
+    texto = ndb.StringProperty(indexed=False)
     fecha = ndb.DateTimeProperty(auto_now_add=True)
+    creador = ndb.KeyProperty(kind='Usuario', required=True)
 
 
 class FlickrCache(ndb.Model):
