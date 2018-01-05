@@ -71,6 +71,7 @@ class Evento(ndb.Model):
     flickrAlbumId = ndb.StringProperty()
     categorias = ndb.KeyProperty(kind='Categoria', repeated=True)
 
+
 # Modelo de meGusta
 class MeGusta(ndb.Model):
     """

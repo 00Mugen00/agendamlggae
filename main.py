@@ -15,7 +15,7 @@ API_ENTITIES_ROUTES = {'Categoria': '/categoria',
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write("""Henlo friend. I see u come h3re and here is the base api handler,
+        self.response.write(u"""Henlo friend. I see u come h3re and here is the base api handler,
         have a nice day :)
         """)
 
@@ -32,5 +32,8 @@ app = webapp2.WSGIApplication([
         routes.PathPrefixRoute(API_ENTITIES_ROUTES['Evento'], [
             webapp2.Route(r'/', EventoHandler)
         ]),
+        routes.PathPrefixRoute('/seed', [
+            webapp2.Route(r'/', SeedHandler)
+        ])
     ]),
 ], debug=True)

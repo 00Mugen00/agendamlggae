@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from categoria_handler import *
-from evento_handler import *
-from usuario_handler import *
+from categoria import CategoriaHandler
+from evento import EventoHandler
+from usuario import UsuarioHandler
+from seed import SeedHandler

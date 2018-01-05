@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from base_handler import BaseHandler
+from base import BaseHandler
 
 
 class CategoriaHandler(BaseHandler):
