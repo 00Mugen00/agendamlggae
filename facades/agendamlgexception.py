@@ -10,3 +10,4 @@ class AgendamlgException(Exception):
     @staticmethod
     def tipo_invalido(tipo):
         return AgendamlgException(u'Tipo de evento inválido {}'.format(tipo),1)
+    
