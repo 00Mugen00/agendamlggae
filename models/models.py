@@ -71,6 +71,17 @@ class Evento(ndb.Model):
     flickrAlbumId = ndb.StringProperty()
     categorias = ndb.KeyProperty(kind='Categoria', repeated=True)
 
+# Modelo de meGusta
+class MeGusta(ndb.Model):
+    """
+    La clave tiene el siguiente aspecto:
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX, 'Evento', XXX, 'MeGusta', XXX)
+
+    MeGusta se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuaro la sesion iniciada:
+    meGusta = MeGusta(creador=usuario.key(),parent=evento.key())
+    """
+    creador = ndb.KeyProperty(kind='Usuario', required=True)
+
 
 # Modelo comentario
 class Comentario(ndb.Model):
