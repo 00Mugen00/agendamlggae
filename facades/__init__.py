@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from agendamlgexception import *
-from agendamlgnotfoundexception import *
+from excepcion import AgendamlgException, AgendamlgNotFoundException, NotAuthenticatedException
 from evento import *
