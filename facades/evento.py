@@ -10,7 +10,7 @@ def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
     """
     :param usuario: Usuario
     :param evento: Evento
-    :param categoriasEvento: list str
+    :param categorias_evento: list str
     :return:
     """
     if evento.tipo < 1 or evento.tipo > 3:

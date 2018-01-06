@@ -7,10 +7,11 @@ import collections
 import util.json
 import datetime
 
+from tokens import flickr_api_key
 from models import FlickrCache
 
 API_URL = u'https://api.flickr.com/services/rest/'
-API_KEY = u'a901b91486eb90e967465d6df5f96ea1'
+API_KEY = flickr_api_key
 
 
 def do_request(method, params):
