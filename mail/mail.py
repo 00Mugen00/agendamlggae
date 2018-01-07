@@ -17,4 +17,4 @@ def send_mail(to,subject,msg):
             message.check_initialized()
             message.send()
         except mail.MissingRecipientError:
-            print 'No recipients was found'
+            print 'Los destinatarios no han sido especificados'
