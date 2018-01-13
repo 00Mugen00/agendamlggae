@@ -109,3 +109,6 @@ webapp/web
 
 .DS_Store
 tokens.json
+
+# Archivo autogenerado por datastore para gestion de claves
+index.yaml
