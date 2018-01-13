@@ -73,7 +73,7 @@ class Evento(ndb.Model):
 class MeGusta(ndb.Model):
     """
     La clave tiene el siguiente aspecto:
-    ('Agenda', AGENDA_NOMBRE, 'Evento', XXX, 'MeGusta', XXX)
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX,'Evento', XXX, 'MeGusta', XXX)
 
     MeGusta se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuaro la sesion iniciada:
     meGusta = MeGusta(creador=usuario.key(),parent=evento.key())
@@ -85,7 +85,7 @@ class MeGusta(ndb.Model):
 class Comentario(ndb.Model):
     """
     La clave tiene el siguiente aspecto:
-    ('Agenda', AGENDA_NOMBRE, 'Evento', XXX, 'Comentario', XXX)
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX,'Evento', XXX, 'Comentario', XXX)
 
     El comentario se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuario la sesion inciada:
     comentario = Comentario(propiedades..., creador=usuario.key(),parent=evento.key())
