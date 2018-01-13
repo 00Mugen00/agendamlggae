@@ -27,7 +27,7 @@ def eliminar_me_gusta(usuario,me_gusta):
         raise NotAuthenticatedException.no_autenticado()
 
 
-def buscar_número_me_gusta_evento(evento):
+def buscar_numero_me_gusta_evento(evento):
     """
     :param evento: buscamos el número de me_gusta de este evento
     :return:
