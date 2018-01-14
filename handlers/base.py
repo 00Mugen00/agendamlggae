@@ -3,7 +3,7 @@
 
 import webapp2
 from facades import AgendamlgNotFoundException, AgendamlgException, NotAuthenticatedException
-from util.json import to_json
+from util.json import to_json, from_json
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -12,6 +12,11 @@ class BaseHandler(webapp2.RequestHandler):
         """Añadir a todas las respuesta el header field de content type adecuado"""
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         super(BaseHandler, self).dispatch()
+
+    def json_body(self):
+        """Obtiene el cuerpo de la petición como un diccionario"""
+        if self.request.body:
+            return from_json(self.request.body)
 
     def handle_exception(self, exception, debug):
         if isinstance(exception, AgendamlgException):

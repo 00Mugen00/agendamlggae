@@ -9,13 +9,6 @@ from google.appengine.api import memcache
 import handlers
 import tokens
 
-API_BASE_URL = '/agendamlg-api'
-
-API_ENTITIES_ROUTES = {'Categoria': '/categoria',
-                       'Usuario': '/usuario',
-                       'Evento': '/evento'
-                       }
-
 OAuthLogin, OAuthTest = handlers.based_on(tokens.google_oauth_decorator,
                                           build("plus", "v1", http=httplib2.Http(memcache)))
 
@@ -28,15 +21,15 @@ class MainHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    routes.PathPrefixRoute(API_BASE_URL, [
+    routes.PathPrefixRoute('/agendamlg-api', [
         webapp2.Route(r'/', MainHandler),
-        routes.PathPrefixRoute(API_ENTITIES_ROUTES['Categoria'], [
+        routes.PathPrefixRoute(r'/categoria', [
             webapp2.Route(r'/', handlers.CategoriaHandler)
         ]),
-        routes.PathPrefixRoute(API_ENTITIES_ROUTES['Usuario'], [
+        routes.PathPrefixRoute(r'/usuario', [
             webapp2.Route(r'/', handlers.UsuarioHandler)
         ]),
-        routes.PathPrefixRoute(API_ENTITIES_ROUTES['Evento'], [
+        routes.PathPrefixRoute(r'/evento', [
             webapp2.Route(r'/', handlers.EventoHandler),
             webapp2.Route(r'/filtrar', handlers.FiltradoHandler)
         ]),
