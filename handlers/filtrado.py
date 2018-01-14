@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from base import BaseHandler
 import util.json
-from google.appengine.ext import ndb
-from facades import buscar_evento_categorias
-
+from base import BaseHandler
+from facades.evento import buscar_evento_categorias
 from models import Usuario
-from datetime import datetime
 
 class FiltradoHandler(BaseHandler):
 
@@ -37,5 +34,4 @@ class FiltradoHandler(BaseHandler):
                      'id': evento.key.id()} for evento in eventos]
 
         self.response.write(util.json.to_json(retorno))
-
 

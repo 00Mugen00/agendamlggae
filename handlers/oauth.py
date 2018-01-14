@@ -3,78 +3,10 @@
 from urllib import urlencode
 from google.appengine.api import memcache
 from oauth2client import client
-from models import Usuario
+from models import Usuario, agenda_key
 from tokens import create_jwt_token, get_user_from_token
 from util import to_json
 import webapp2
-
-
-"""
-class OAuthLogin(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if 'url' in self.request.params:
-            original_url = self.request.params['url']
-        else:
-            original_url = self.request.headers['referer']
-
-        self.response.status_int = 301
-        if user:
-            self.response.headers['Location'] = original_url
-        else:
-            next_url = self.request.path_url.replace('login', 'response')
-            self.response.headers['Location'] = users.create_login_url(u'{}?url={}'.format(next_url, original_url))
-
-
-class OAuthResponseLogin(webapp2.RequestHandler):
-
-    def get(self):
-        end_url = self.request.GET.get('url', self.request.host_url)
-        user = users.get_current_user()
-        if user:
-            pass
-
-        self.response.status_int = 301
-        self.response.headers['Location'] = end_url
-
-
-class OAuthLogout(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if 'url' in self.request.params:
-            original_url = self.request.params['url']
-        else:
-            original_url = self.request.headers['referer']
-
-        self.response.status_int = 301
-        if user:
-            self.response.headers['Location'] = users.create_logout_url(original_url)
-        else:
-            self.response.headers['Location'] = original_url
-
-
-class OAuthTest(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if user:
-            self.response.write(u'''<html>
-<body>
-    <p>Hello {}, your user id is {}</p>
-    <p><a href="/agendamlg-api/oauth/logout">Logout</a></p>
-</body>
-</html>
-            '''.format(user.nickname(), user.user_id()))
-        else:
-            self.response.write(u'''<html>
-    <body>
-        <p>I don't know you :/</p>
-        <p><a href="/agendamlg-api/oauth/login">Login</a></p>
-    </body>
-</html>''')
-"""
 
 
 def based_on(decorator, service):
@@ -110,7 +42,13 @@ def based_on(decorator, service):
                     # Register or modify the user in ndb
                     user_or_not = Usuario.query(Usuario.idGoogle == user_id).fetch()
                     if not user_or_not:
-                        Usuario(idGoogle=user[u'id'], tipo=1, preferencias=[], extra=to_json(user)).put()
+                        Usuario(
+                            idGoogle=user[u'id'],
+                            tipo=1,
+                            preferencias=[],
+                            extra=to_json(user),
+                            parent=agenda_key()
+                        ).put()
                         newcomer = True
                     else:
                         user_or_not[0].extra = to_json(user)
@@ -123,7 +61,7 @@ def based_on(decorator, service):
                     else:
                         newcomer = str(newcomer).lower()
                         self.response.headers['Content-Type'] = 'application/json; charset=utf8'
-                        self.response.write(u'{"token": "{}", "newcomer": {}}'.format(jwt_token, newcomer))
+                        self.response.write(u'{{"token": "{}", "newcomer": {}}}'.format(jwt_token, newcomer))
                 except client.AccessTokenRefreshError:
                     self.redirect(self.request.path_url + '?' + urlencode({'url', original_url}))
             else:
@@ -141,7 +79,7 @@ def based_on(decorator, service):
                 self.response.write(u"""<html>
     <body>
         <p>{} {}, your user id is {} {}</p>
-        <p><a href="/agendamlg-api/oauth/logout">Logout</a></p>
+        <p><a href="/agendamlg-api/session/test">Logout</a></p>
     </body>
     </html>
                 """.format(u'Welcome' if newcomer else u'Hello', user[u'displayName'], user[u'id'], _.tipo))
@@ -149,7 +87,7 @@ def based_on(decorator, service):
                 self.response.write(u"""<html>
         <body>
             <p>I don't know you :/</p>
-            <p><a href="/agendamlg-api/oauth/login">Login</a></p>
+            <p><a href="/agendamlg-api/session/">Login</a></p>
         </body>
     </html>""")
 
