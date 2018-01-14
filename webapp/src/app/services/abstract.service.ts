@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 
 export class AbstractService{
 
-  private static BASE_URL = "http://localhost:8080/agendamlgr-war/rest";
+  public static BASE_URL = "http://localhost:8080/agendamlg-api";
 
   constructor(private http: HttpClient) {}
 
