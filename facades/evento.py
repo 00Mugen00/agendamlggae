@@ -79,6 +79,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     :param filtrado: Descrito anteriormente
     :return: list Evento
     """
+    print filtrado['textoTitulo']
 
     fecha_actual = dt.now()
 
@@ -92,8 +93,8 @@ def buscar_evento_categorias(usuario, **filtrado):
     consulta = consulta.filter(ndb.OR(Evento.fecha > fecha_actual, Evento.tipo == 2, Evento.tipo == 3))
 
     # Si no se pide filtrado por distancia, se hace ordenacion por fecha descendente
-    if not filtrado['filtroCercania']:
-        consulta = consulta.order(-Evento.fecha)
+    if not filtrado.get('filtroCercania'):
+        consulta = consulta.order(Evento.fecha)
 
     else:
         # De lo contrario no se traen de la base de datos eventos que no tengan coordenadas
@@ -104,7 +105,7 @@ def buscar_evento_categorias(usuario, **filtrado):
         consulta = consulta.filter(Evento.validado == True)
 
     # Si se da una lista de categorias y esta no es vacia considera tambien en la consulta
-    if 'categorias' in filtrado and len(filtrado['categorias']) > 0:
+    if len(filtrado.get('categorias',[])) > 0:
         # Lista de claves de categorias
         consulta = consulta.filter(Evento.categorias.IN([cat.key for cat in filtrado['categorias']]))
 
@@ -118,7 +119,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     resultados = consulta.fetch()
 
     # Se dispone de filtro de cercania, en consecuencia los eventos se ordenan por distancia a la proporcionada
-    if filtrado['filtroCercania']:
+    if filtrado.get('filtroCercania', False):
         # Preparar un iterador con pares (distancia, evento). Donde distancia es la distancia del evento a
         # la posición proporcionada
         distancias = ((distancia((ev.coordenadas.lat, ev.coordenadas.lon),
@@ -137,8 +138,8 @@ def buscar_evento_categorias(usuario, **filtrado):
 
     # Fitrar resultados de nuevo, esta vez por el texto del titulo que se ofrezca (si se ofrece)
 
-    if 'textoTitulo' in filtrado and len(filtrado['textoTitulo'].strip()) > 0:
-
+    if len(filtrado.get('textoTitulo', '').strip()) > 0:
+        print 'filtro de titulo'
         resultados = [evento_filtro for evento_filtro in resultados if filtrado['textoTitulo'].lower() in evento_filtro.nombre.lower()]
 
     return resultados
