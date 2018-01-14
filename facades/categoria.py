@@ -7,8 +7,7 @@ def buscar_preferencias_usuario(usuario):
     :return: list Categorias
     """
     if usuario:
-        q = Categoria.query(ancestor=usuario)
-        return q.fetch()
+        return [ c.get() for c in usuario.preferencias ]
     else:
         raise AgendamlgNotFoundException.usuario_no_existe()
 
@@ -19,8 +18,7 @@ def buscar_categorias_evento(evento):
         :return: list Categorias
         """
     if evento:
-        q = Categoria.query(ancestor=evento)
-        return q.fetch()
+        return [ c.get() for c in evento.categorias ]
     else:
         raise AgendamlgNotFoundException.evento_no_existe()
 

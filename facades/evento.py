@@ -40,7 +40,7 @@ def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
         raise NotAuthenticatedException.no_autenticado()
     evento.put()
     evento.categorias = [categoria.key for categoria in categorias]
-    enviar_correo_interesados(evento)
+    #enviar_correo_interesados(evento)
 
 
 def buscar_eventos_usuario(usuario, todos):
