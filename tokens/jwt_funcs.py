@@ -24,16 +24,17 @@ def create_jwt_token(google_id):
 
 def decode_jwt_token(token):
     """
-    Decodes a JWT produced from 'create_jwt_token'
+    Decodes a JWT produced from 'create_jwt_token'. If 'token' is False-evaluable, returns None.
 
     :param token: JWT Token
     :return: dict with the payload stored inside it
     :raises: facades.exception.NotAuthenticatedException if the token has expired
     """
-    try:
-        return jwt.decode(token, jwt_token, algorithms='HS512')
-    except jwt.ExpiredSignatureError as e:
-        raise NotAuthenticatedException.expirado(e)
+    if token:
+        try:
+            return jwt.decode(token, jwt_token, algorithms='HS512')
+        except jwt.ExpiredSignatureError as e:
+            raise NotAuthenticatedException.expirado(e)
 
 
 def get_user_from_token(token, raise_for_unauthenticated=True):
