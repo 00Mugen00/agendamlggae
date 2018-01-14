@@ -108,5 +108,9 @@ webapp/node_modules
 webapp/web
 
 .DS_Store
+
+# Archivo autogenerado por datastore para gestion de claves
+index.yaml
+
 *tokens.json
 lib/

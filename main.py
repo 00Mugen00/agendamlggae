@@ -37,7 +37,8 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/', handlers.UsuarioHandler)
         ]),
         routes.PathPrefixRoute(API_ENTITIES_ROUTES['Evento'], [
-            webapp2.Route(r'/', handlers.EventoHandler)
+            webapp2.Route(r'/', handlers.EventoHandler),
+            webapp2.Route(r'/filtrar', handlers.FiltradoHandler)
         ]),
         routes.PathPrefixRoute(r'/seed', [
             webapp2.Route(r'/', handlers.SeedHandler)
