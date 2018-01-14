@@ -79,10 +79,12 @@ def based_on(decorator, service):
                 self.response.write(u"""<html>
     <body>
         <p>{} {}, your user id is {} {}</p>
+        <p>{}</p>
         <p><a href="/agendamlg-api/session/test">Logout</a></p>
     </body>
     </html>
-                """.format(u'Welcome' if newcomer else u'Hello', user[u'displayName'], user[u'id'], _.tipo))
+                """.format(u'Welcome' if newcomer else u'Hello', user[u'displayName'], user[u'id'], _.tipo,
+                           self.request.GET['token']))
             else:
                 self.response.write(u"""<html>
         <body>

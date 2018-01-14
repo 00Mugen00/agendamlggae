@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { HttpErrorResponse } from '@angular/common/http';
 import { Error,ErrorsList } from "../../interfaces/error";
+import {AbstractService} from "../../services/abstract.service";
 const $ = window['$'];
 
 @Component({
@@ -24,7 +25,7 @@ export class MostrarErrorComponent implements OnChanges {
                         this.errorMessage = error.error.message;
                         this.otherErrorMessage = error.error.otherMessage;
                         if (error.error.error_id === ErrorsList.EXPIRADO) {
-                            window.location.href = 'http://localhost:8080/agendamlgr-war/oauth/init';
+                            window.location.href = `${AbstractService.BASE_URL}/session/`;
                         }
                     } else {
                         this.errorMessage = "No se ha podido establecer conexión con el servidor";
