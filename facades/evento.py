@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from models import Evento, Categoria
-from excepcion import AgendamlgException, AgendamlgNotFoundException
+from excepcion import AgendamlgException, AgendamlgNotFoundException, NotAuthenticatedException
 import datetime
 from datetime import datetime as dt
 import math
@@ -22,10 +22,12 @@ def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
     categorias = Categoria.query(Categoria.nombre.IN(categorias_evento)).fetch()
     if usuario.tipo == 1:
         evento.validado = False
-    elif usuario.tipo > 1:
+    elif usuario.tipo > 1 and usuario.tipo <4:
         evento.validado = True
+    else:
+        raise NotAuthenticatedException.no_autenticado()
     evento.put()
-    evento.categorias = [categoria.key() for categoria in categorias]
+    evento.categorias = [categoria.key for categoria in categorias]
     # enviarCorreoInteresados(evento) -> PUEDE QUE NO LO NECESITEMOS
 
 
@@ -36,7 +38,7 @@ def buscar_eventos_usuario(usuario, todos):
     :return: list Evento
     """
     if usuario:
-        q = Evento.query(ancestor=usuario.key())
+        q = Evento.query(ancestor=usuario.key)
         if todos:
             q.filter(Evento.validado == True)
         q.order(Evento.fecha)

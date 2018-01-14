@@ -2,4 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from excepcion import AgendamlgException, AgendamlgNotFoundException, NotAuthenticatedException
-from evento import buscar_evento_categorias
+
+from evento import *
+from comentario import *
+from megusta import *

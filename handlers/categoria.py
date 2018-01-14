@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from base import BaseHandler
-import webapp2
-import tokens
 
 
 class CategoriaHandler(BaseHandler):

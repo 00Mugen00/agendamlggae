@@ -25,7 +25,6 @@ class Categoria(ndb.Model):
     categoria = Categoria(propiedades...,parent=agenda_key())
     categoria.put()
     """
-
     nombre = ndb.StringProperty(required=True)
 
 
@@ -42,10 +41,10 @@ class Usuario(ndb.Model):
     Representacion de las preferencias
     [('Agenda', AGENDA_NOMBRE, 'Categoria', 347298),('Agenda', AGENDA_NOMBRE, 'Categoria', 347298)]
     """
-
     idGoogle = ndb.StringProperty(required=True)
     tipo = ndb.IntegerProperty(required=True)
     preferencias = ndb.KeyProperty(kind='Categoria', repeated=True)
+    extra = ndb.StringProperty(indexed=False)
 
 
 # Modelo de evento
@@ -58,7 +57,6 @@ class Evento(ndb.Model):
     evento = Evento(propiedades..., parent=usuario.key)
     evento.put()
     """
-
     tipo = ndb.IntegerProperty(required=True)
     nombre = ndb.StringProperty(required=True)
     descripcion = ndb.StringProperty(required=True, indexed=False)
@@ -76,7 +74,7 @@ class Evento(ndb.Model):
 class MeGusta(ndb.Model):
     """
     La clave tiene el siguiente aspecto:
-    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX, 'Evento', XXX, 'MeGusta', XXX)
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX,'Evento', XXX, 'MeGusta', XXX)
 
     MeGusta se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuaro la sesion iniciada:
     meGusta = MeGusta(creador=usuario.key(),parent=evento.key())
@@ -88,13 +86,12 @@ class MeGusta(ndb.Model):
 class Comentario(ndb.Model):
     """
     La clave tiene el siguiente aspecto:
-    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX, 'Evento', XXX, 'Comentario', XXX)
+    ('Agenda', AGENDA_NOMBRE, 'Usuario', XXX,'Evento', XXX, 'Comentario', XXX)
 
     El comentario se crea, dado un evento, ademas fijar la propiedad creador, teniendo usuario la sesion inciada:
     comentario = Comentario(propiedades..., creador=usuario.key(),parent=evento.key())
     comentario.put()
     """
-
     texto = ndb.StringProperty(indexed=False)
     fecha = ndb.DateTimeProperty(auto_now_add=True)
     creador = ndb.KeyProperty(kind='Usuario', required=True)
