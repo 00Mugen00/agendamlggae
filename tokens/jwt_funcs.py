@@ -38,6 +38,7 @@ def decode_jwt_token(token):
 
 
 def get_user_from_token(token, raise_for_unauthenticated=True):
+    # type: (unicode|str, bool) -> (dict, Usuario)
     """
     Decodes a JWT produced from the header `bearer` and returns the tuple Google User object associated with it and
     the user from the database. The dictionary has the following structure:

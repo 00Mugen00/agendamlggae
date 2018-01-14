@@ -27,7 +27,8 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/', handlers.CategoriaHandler)
         ]),
         routes.PathPrefixRoute(r'/usuario', [
-            webapp2.Route(r'/', handlers.UsuarioHandler)
+            webapp2.Route(r'/', handlers.UsuarioHandler),
+            webapp2.Route(r'/<uid:\d+>', handlers.UsuarioEspecificoHandler)
         ]),
         routes.PathPrefixRoute(r'/evento', [
             webapp2.Route(r'/', handlers.EventoHandler),

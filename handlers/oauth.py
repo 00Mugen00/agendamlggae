@@ -3,7 +3,7 @@
 from urllib import urlencode
 from google.appengine.api import memcache
 from oauth2client import client
-from models import Usuario
+from models import Usuario, agenda_key
 from tokens import create_jwt_token, get_user_from_token
 from util import to_json
 import webapp2
@@ -42,7 +42,13 @@ def based_on(decorator, service):
                     # Register or modify the user in ndb
                     user_or_not = Usuario.query(Usuario.idGoogle == user_id).fetch()
                     if not user_or_not:
-                        Usuario(idGoogle=user[u'id'], tipo=1, preferencias=[], extra=to_json(user)).put()
+                        Usuario(
+                            idGoogle=user[u'id'],
+                            tipo=1,
+                            preferencias=[],
+                            extra=to_json(user),
+                            parent=agenda_key()
+                        ).put()
                         newcomer = True
                     else:
                         user_or_not[0].extra = to_json(user)
