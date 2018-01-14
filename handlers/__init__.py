@@ -5,3 +5,4 @@ from categoria import CategoriaHandler
 from evento import EventoHandler
 from usuario import UsuarioHandler
 from seed import SeedHandler
+from filtrado import FiltradoHandler
