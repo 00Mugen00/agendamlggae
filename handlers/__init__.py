@@ -6,4 +6,5 @@ from evento import EventoHandler
 from usuario import UsuarioHandler, UsuarioEspecificoHandler
 from seed import SeedHandler
 from filtrado import FiltradoHandler
+from comentario import ComentarioHandler
 from oauth import based_on

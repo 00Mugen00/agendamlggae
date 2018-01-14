@@ -15,6 +15,8 @@ from google.appengine.ext.ndb import GeoPt
 from handlers.base import BaseHandler
 from models import Categoria, Usuario, Evento, Comentario, MeGusta, agenda_key
 
+from util import to_utc
+
 
 def add_categories():
     Categoria(nombre=u'Teatro', parent=agenda_key()).put()
@@ -157,14 +159,14 @@ def user_id(uid):
 
 def parse_datetime(time_str):
     match = re.match(r'(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+).\d*', time_str)
-    return dt(
+    return to_utc(dt(
         year=int(match.group(1)),
         month=int(match.group(2)),
         day=int(match.group(3)),
         hour=int(match.group(4)),
         minute=int(match.group(5)),
         second=int(match.group(6))
-    )
+    ))
 
 
 def add_events():
@@ -800,7 +802,7 @@ def add_comments(events):
         day = 1 + day % 31
         Comentario(
             texto=u'¡¡ Madre mia como mola !!',
-            fecha=dt(year=2018, month=month, day=day, hour=10 + i / 2, minute=rand(0, 59), second=rand(0, 59)),
+            fecha=to_utc(dt(year=2018, month=month, day=day, hour=10 + i / 2, minute=rand(0, 59), second=rand(0, 59))),
             creador=manu,
             parent=events[i]
         ).put()
@@ -808,21 +810,24 @@ def add_comments(events):
         if (i % 3) == 0:
             Comentario(
                 texto=u'Ostia tu, m\'agrada això, asistiré 😁',
-                fecha=dt(year=2018, month=month, day=day, hour=18 + (i % 5), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=18 + (i % 5), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=melchor,
                 parent=events[i]
             ).put()
         elif (i % 3) == 1:
             Comentario(
                 texto=u'Eh, una pena que no pueda ir, el horario me va mal :( Pero me gustaria ir, tiene buena pinta',
-                fecha=dt(year=2018, month=month, day=day, hour=12 + (i % 4), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=12 + (i % 4), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=john,
                 parent=events[i]
             ).put()
         elif (i % 3) == 2:
             Comentario(
                 texto=u'⬆️😁💪🏿',
-                fecha=dt(year=2018, month=month, day=day, hour=14 + (i % 7), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=14 + (i % 7), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=antonio,
                 parent=events[i]
             ).put()
