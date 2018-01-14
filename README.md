@@ -23,8 +23,9 @@ agendamlggae proporciona los siguientes servicios:
 el cliente permite acceder todos los servicios de la lista.
 
 ## Configuración
- 1. Instalar dependencias de node.js del proyecto _agendamlgr-cliente_ con `npm install`
- 2. Compilar la versión _debug_ (`npm run build-debug`) o _release_ (`npm run build`) del cliente
+ 1. Instalar las dependencias de Python con `pip install -t lib -r requirements.txt`
+ 2. Instalar dependencias de node.js del proyecto _webapp_ con `npm install`
+ 3. Compilar la versión _debug_ (`npm run build-debug`) o _release_ (`npm run build`) del cliente
 
 ## Quieres instalar AngularMaps (o cualquier otra nueva dependencia) y peta?
 Si después del pull `npm install` no funciona, haz lo siguiente: `npm i -f` y luego `npm install`

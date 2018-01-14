@@ -46,6 +46,7 @@ class Usuario(ndb.Model):
     idGoogle = ndb.StringProperty(required=True)
     tipo = ndb.IntegerProperty(required=True)
     preferencias = ndb.KeyProperty(kind='Categoria', repeated=True)
+    extra = ndb.StringProperty(indexed=False)
 
 
 # Modelo de evento

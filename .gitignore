@@ -108,4 +108,5 @@ webapp/node_modules
 webapp/web
 
 .DS_Store
-tokens.json
+*tokens.json
+lib/
