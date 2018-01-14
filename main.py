@@ -25,6 +25,7 @@ app = webapp2.WSGIApplication([
         webapp2.Route(r'/', MainHandler),
         routes.PathPrefixRoute(r'/categoria', [
             webapp2.Route(r'/preferencias', handlers.PreferenciasHandler),
+            webapp2.Route(r'/preferencias/<categoria_key:[a-zA-Z\-0-9]+>', handlers.PreferenciasHandler),
             webapp2.Route(r'/', handlers.CategoriasHandler),
             webapp2.Route(r'/<categoria_key:[a-zA-Z\-0-9]+>', handlers.CategoriaHandler)
         ]),

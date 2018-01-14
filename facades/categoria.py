@@ -14,9 +14,9 @@ def buscar_preferencias_usuario(usuario):
 
 def buscar_categorias_evento(evento):
     """
-        :param evento: Evento
-        :return: list Categorias
-        """
+    :param evento: Evento
+    :return: list Categorias
+    """
     if evento:
         return [ c.get() for c in evento.categorias ]
     else:
@@ -25,32 +25,22 @@ def buscar_categorias_evento(evento):
 
 def eliminar_preferencia_usuario(usuario, preferencia):
     """
-            :param usuario: Usuario
-            :param preferencia: Categoria
-            :return: boolean
-            """
-
-    q = Categoria.query(ancestor=usuario)
-    q.filter(Categoria.key == preferencia.key)
-    categories = q.fetch()
-    if not categories:
-        usuario.preferencias.remove(categories[0])
-        return False
-    else:
-        return True
-
-
-def agregar_preferencia_usuario(usuario, prefe):
+    :param usuario: Usuario
+    :param preferencia: Categoria
+    :return: boolean
     """
-            :param usuario: Usuario
-            :param prefe: Categoria
-            :return:
-            """
     if usuario:
-        q = Categoria.query(Categoria.key == prefe.key)
-        category = q.fetch()
-        if category:
-            usuario.preferencias.insert(category)
-        else:
-            AgendamlgNotFoundException.categoria_no_existe()
+        usuario.preferencias.remove(preferencia)
+        usuario.put()
+
+
+def agregar_preferencia_usuario(usuario, preferencia_key):
+    """
+    :param usuario: Usuario
+    :param prefe: Categoria
+    :return:
+    """
+    if usuario:
+        usuario.preferencias.append(preferencia_key)
+        usuario.put()
 

@@ -32,3 +32,18 @@ class PreferenciasHandler(BaseHandler):
             categoria_nueva = {'id':categoria.key.urlsafe(),'nombre':categoria.nombre}
             categorias.append(categoria_nueva)
         self.response.write(to_json(categorias))
+
+    def delete(self,categoria_key):
+        _, usuario_sesion = get_user_from_token(self.request.headers.get('bearer'))
+        cat.eliminar_preferencia_usuario(usuario_sesion, ndb.Key(urlsafe=categoria_key))
+        self.response.write(u'{"deleted": true}')
+
+    def post(self):
+        _, usuario_sesion = get_user_from_token(self.request.headers.get('bearer'))
+        categoria_nueva = self.json_body()
+        cat.agregar_preferencia_usuario(usuario_sesion, ndb.Key(urlsafe=categoria_nueva.get('id')))
+        categorias = []
+        for categoria in cat.buscar_preferencias_usuario(usuario_sesion):
+            categoria_nueva = {'id':categoria.key.urlsafe(),'nombre':categoria.nombre}
+            categorias.append(categoria_nueva)
+        self.response.write(to_json(categorias))
