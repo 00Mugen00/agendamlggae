@@ -42,9 +42,9 @@ app = webapp2.WSGIApplication([
         routes.PathPrefixRoute(r'/seed', [
             webapp2.Route(r'/', handlers.SeedHandler)
         ]),
-        routes.PathPrefixRoute(r'/oauth', [
-            webapp2.Route(r'/', OAuthTest),
-            webapp2.Route(r'/login', OAuthLogin)
+        routes.PathPrefixRoute(r'/session', [
+            webapp2.Route(r'/test', OAuthTest),
+            webapp2.Route(r'/', OAuthLogin)
         ])
     ]),
     webapp2.Route(tokens.google_oauth_decorator.callback_path, tokens.google_oauth_decorator.callback_handler())

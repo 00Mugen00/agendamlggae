@@ -9,74 +9,6 @@ from util import to_json
 import webapp2
 
 
-"""
-class OAuthLogin(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if 'url' in self.request.params:
-            original_url = self.request.params['url']
-        else:
-            original_url = self.request.headers['referer']
-
-        self.response.status_int = 301
-        if user:
-            self.response.headers['Location'] = original_url
-        else:
-            next_url = self.request.path_url.replace('login', 'response')
-            self.response.headers['Location'] = users.create_login_url(u'{}?url={}'.format(next_url, original_url))
-
-
-class OAuthResponseLogin(webapp2.RequestHandler):
-
-    def get(self):
-        end_url = self.request.GET.get('url', self.request.host_url)
-        user = users.get_current_user()
-        if user:
-            pass
-
-        self.response.status_int = 301
-        self.response.headers['Location'] = end_url
-
-
-class OAuthLogout(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if 'url' in self.request.params:
-            original_url = self.request.params['url']
-        else:
-            original_url = self.request.headers['referer']
-
-        self.response.status_int = 301
-        if user:
-            self.response.headers['Location'] = users.create_logout_url(original_url)
-        else:
-            self.response.headers['Location'] = original_url
-
-
-class OAuthTest(webapp2.RequestHandler):
-
-    def get(self):
-        user = users.get_current_user()
-        if user:
-            self.response.write(u'''<html>
-<body>
-    <p>Hello {}, your user id is {}</p>
-    <p><a href="/agendamlg-api/oauth/logout">Logout</a></p>
-</body>
-</html>
-            '''.format(user.nickname(), user.user_id()))
-        else:
-            self.response.write(u'''<html>
-    <body>
-        <p>I don't know you :/</p>
-        <p><a href="/agendamlg-api/oauth/login">Login</a></p>
-    </body>
-</html>''')
-"""
-
-
 def based_on(decorator, service):
     """
     Adapted from https://github.com/google/google-api-python-client/blob/master/samples/appengine/main.py
@@ -123,7 +55,7 @@ def based_on(decorator, service):
                     else:
                         newcomer = str(newcomer).lower()
                         self.response.headers['Content-Type'] = 'application/json; charset=utf8'
-                        self.response.write(u'{"token": "{}", "newcomer": {}}'.format(jwt_token, newcomer))
+                        self.response.write(u'{{"token": "{}", "newcomer": {}}}'.format(jwt_token, newcomer))
                 except client.AccessTokenRefreshError:
                     self.redirect(self.request.path_url + '?' + urlencode({'url', original_url}))
             else:
@@ -141,7 +73,7 @@ def based_on(decorator, service):
                 self.response.write(u"""<html>
     <body>
         <p>{} {}, your user id is {} {}</p>
-        <p><a href="/agendamlg-api/oauth/logout">Logout</a></p>
+        <p><a href="/agendamlg-api/session/test">Logout</a></p>
     </body>
     </html>
                 """.format(u'Welcome' if newcomer else u'Hello', user[u'displayName'], user[u'id'], _.tipo))
@@ -149,7 +81,7 @@ def based_on(decorator, service):
                 self.response.write(u"""<html>
         <body>
             <p>I don't know you :/</p>
-            <p><a href="/agendamlg-api/oauth/login">Login</a></p>
+            <p><a href="/agendamlg-api/session/">Login</a></p>
         </body>
     </html>""")
 
