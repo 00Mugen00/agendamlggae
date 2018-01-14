@@ -1,13 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from models import Evento, Categoria
+from models import Evento, Categoria, Usuario
 from excepcion import AgendamlgException, AgendamlgNotFoundException, NotAuthenticatedException
 import datetime
 from datetime import datetime as dt
 import math
 from google.appengine.ext import ndb
 from operator import itemgetter
+from mail import send_mail
+from facades import usuario
+
+
+def enviar_correo_interesados(evento):
+    categorias = Categoria.query(Categoria.nombre.IN(evento.categorias)).fetch()
+    send_mail(usuario.buscar_usuarios_preferencias(categorias),u'Hay un evento que te puede gustar',evento.nombre+u' es un evento de tu preferencia')
+
+
+def enviar_correo_creador(evento,creador):
+    usuarios = [creador]
+    send_mail(usuarios,u'Tu evento ha sido publicado',u'El evento '+evento.nombre+' ha sido publicado')
 
 
 def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
@@ -28,7 +40,7 @@ def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
         raise NotAuthenticatedException.no_autenticado()
     evento.put()
     evento.categorias = [categoria.key for categoria in categorias]
-    # enviarCorreoInteresados(evento) -> PUEDE QUE NO LO NECESITEMOS
+    enviar_correo_interesados(evento)
 
 
 def buscar_eventos_usuario(usuario, todos):
