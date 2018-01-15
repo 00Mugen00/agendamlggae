@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from facades import AgendamlgNotFoundException
+from facades import AgendamlgNotFoundException, AgendamlgException
 from models import Comentario, Usuario, Evento
 from google.appengine.ext import ndb
-from util import parse_date, to_utc
+from util import to_utc
 from excepcion import NotAuthenticatedException
 
 
@@ -15,11 +15,18 @@ def crear_editar_megusta(usuario, evento, comentario):
     :param comentario: comentario que se está creando o comentario que se está modificando
     :return: el Comentario nuevo
     """
+    if u'texto' not in comentario:
+        raise AgendamlgException.comentario_campos_invalidos()
+
+    otro_comentario = Comentario.query(Comentario.creador == usuario.key, ancestor=evento).fetch()
+    if otro_comentario:
+        raise AgendamlgException.usuario_ya_ha_comentado(usuario.idGoogle)
+
     comentario = Comentario(
         parent=evento,
         creador=usuario.key,
         texto=comentario[u'texto'],
-        fecha=parse_date(comentario[u'fecha']).replace(tzinfo=None) if u'fecha' in comentario else to_utc()
+        fecha=to_utc()
     )
     if 0 < usuario.tipo < 4:
         comentario.put()
@@ -28,17 +35,21 @@ def crear_editar_megusta(usuario, evento, comentario):
         raise NotAuthenticatedException.no_autenticado()
 
 
-def eliminar_comentario(usuario, comentario):
+def eliminar_comentario(usuario, evento):
     # type: (Usuario, ndb.Key) -> None
     """
     :param usuario: usuario que elimina el comentario
-    :param comentario: comentario que se quiere eliminar
+    :param evento: evento al que eliminar el comentario del usuario
     :return:
     """
+    comentario = Comentario.query(Comentario.creador == usuario.key, ancestor=evento).fetch()
+    if not comentario:
+        AgendamlgNotFoundException.comentario_no_existe(evento.urlsafe())
+    comentario = comentario[0]
     if usuario.tipo == 3 or usuario.key == comentario.get().creador:
         comentario.delete()
     else:
-        raise AgendamlgNotFoundException.comentario_no_existe(comentario.urlsafe())
+        raise AgendamlgException.sin_permisos(usuario.idGoogle)
 
 
 def buscar_comentarios_evento(usuario, evento):
@@ -50,7 +61,7 @@ def buscar_comentarios_evento(usuario, evento):
     """
     evento = evento.get()
     tipo = usuario.tipo if usuario else 1
-    if (tipo == 3 or evento.validado) or usuario.key == evento.key.parent():
+    if evento is not None and (tipo == 3 or evento.validado or usuario.key == evento.key.parent()):
         q = Comentario.query(ancestor=evento.key)
         return q.fetch()
     else:
