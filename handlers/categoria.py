@@ -10,10 +10,15 @@ from facades import categoria as cat
 from facades import AgendamlgNotFoundException
 
 class CategoriaHandler(BaseHandler):
-    def get(self,categoria_key):
-        categoria = ndb.Key(urlsafe=categoria_key).get()
-        categoria_mostrada = {'id': categoria.key.urlsafe(), 'nombre': categoria.nombre}
-        self.response.write(to_json(categoria_mostrada))
+    def get(self, categoria_key):
+        try:
+            categoria = ndb.Key(urlsafe=categoria_key).get()
+            if not categoria:
+                raise AgendamlgNotFoundException.categoria_no_existe(categoria_key)
+            categoria_mostrada = {'id': categoria.key.urlsafe(), 'nombre': categoria.nombre}
+            self.response.write(to_json(categoria_mostrada))
+        except Exception:
+            raise AgendamlgNotFoundException.categoria_no_existe(categoria_key)
 
 
 class CategoriasHandler(BaseHandler):
