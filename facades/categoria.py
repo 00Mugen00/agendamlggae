@@ -3,14 +3,12 @@ from excepcion import AgendamlgException, AgendamlgNotFoundException
 
 def buscar_preferencias_usuario(usuario):
     """
-    :param usuario: Usuario
+    :param usuario: Usuario el cual se presupone existe
     :return: list Categorias
     """
-    if usuario:
-        q = Categoria.query(ancestor=usuario)
-        return q.fetch()
-    else:
-        raise AgendamlgNotFoundException.usuario_no_existe()
+    claves_categorias_usuario = Usuario.query(Usuario.key == usuario.key).fetch()[0].preferencias
+
+    return [Categoria.query(Categoria.key == categoria_clave).fetch()[0] for categoria_clave in claves_categorias_usuario]
 
 
 def buscar_categorias_evento(evento):

@@ -80,7 +80,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     aspecto:
 
     {
-    categorias: list Categoria, # Lista de categorias para filtrado, objetos Categoria!
+    categorias: list Categoria, # Lista de claves de Categoria para el filtrado, claves de Categoria!
     filtroCercania: Boolean     # Indicar si se esta filtrando (ordenando) por cercania respecto a una posicion y radio dados
     coordenadas: ndb.GeoPt      # Objeto GeoPt de ndb que almacena las coordenadas, posicion dada por el usuario (procedente GeoLocalizacion normalmente)
     radio: float                # Radio alrededor del cual filtrar los eventos
@@ -91,7 +91,6 @@ def buscar_evento_categorias(usuario, **filtrado):
     :param filtrado: Descrito anteriormente
     :return: list Evento
     """
-    print filtrado['textoTitulo']
 
     fecha_actual = dt.now()
 
@@ -118,7 +117,6 @@ def buscar_evento_categorias(usuario, **filtrado):
 
     # Si se da una lista de categorias y esta no es vacia considera tambien en la consulta
     if len(filtrado.get('categorias',[])) > 0:
-        # Lista de claves de categorias
         consulta = consulta.filter(Evento.categorias.IN([cat.key for cat in filtrado['categorias']]))
 
     # El orden por distancia o el filtrado por titulo debe hacerse fuera de DataStore por la forma en que este funciona
@@ -151,8 +149,8 @@ def buscar_evento_categorias(usuario, **filtrado):
     # Fitrar resultados de nuevo, esta vez por el texto del titulo que se ofrezca (si se ofrece)
 
     if len(filtrado.get('textoTitulo', '').strip()) > 0:
-        print 'filtro de titulo'
-        resultados = [evento_filtro for evento_filtro in resultados if filtrado['textoTitulo'].lower() in evento_filtro.nombre.lower()]
+        palabra_clave = filtrado.get('textoTitulo', '').strip().lower()
+        resultados = [evento_filtro for evento_filtro in resultados if palabra_clave in evento_filtro.nombre.lower()]
 
     return resultados
 
