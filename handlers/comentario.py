@@ -18,7 +18,7 @@ class ComentarioHandler(BaseHandler):
         _, usuario_sesion = get_user_from_token(self.request.headers.get('bearer'))
         nuevo_comentario = self.json_body()
         evento = ComentarioHandler.__evento_o_fallo(eid)
-        comentarios = comentario.crear_editar_megusta(usuario_sesion, evento, nuevo_comentario)
+        comentarios = comentario.crear_comentario(usuario_sesion, evento, nuevo_comentario)
         self.response.write(ComentarioHandler.__comentarios_a_json([ comentarios ]))
 
     def delete(self, eid):

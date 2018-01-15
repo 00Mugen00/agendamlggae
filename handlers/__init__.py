@@ -7,4 +7,5 @@ from usuario import UsuarioHandler, UsuarioEspecificoHandler
 from seed import SeedHandler
 from filtrado import FiltradoHandler
 from comentario import ComentarioHandler
+from megusta import MeGustaHandler
 from oauth import based_on

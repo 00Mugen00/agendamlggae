@@ -7,7 +7,7 @@ from util import to_utc
 from excepcion import NotAuthenticatedException
 
 
-def crear_editar_megusta(usuario, evento, comentario):
+def crear_comentario(usuario, evento, comentario):
     # type: (Usuario, Evento, {unicode|str:object}) -> Comentario
     """
     :param usuario: Usuario que crea o edita el comentario
