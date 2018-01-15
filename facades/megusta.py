@@ -1,30 +1,35 @@
 # -*- coding: utf-8 -*-
 
 from models import MeGusta
-from excepcion import NotAuthenticatedException
+from excepcion import AgendamlgException
 
-def crear_me_gusta(usuario,me_gusta):
+def crear_me_gusta(usuario, evento):
     """
     :param usuario: usuario que crea o edita el comentario
-    :param me_gusta: megusta que queremos insertar en la base de datos
+    :param evento: evento que me gusta
     :return:
     """
-    if usuario.tipo > 0 and usuario.tipo <4:
+    me_gusta = MeGusta(
+        parent=evento,
+        creador=usuario.key
+    )
+    if 0 < usuario.tipo < 4 and evento.validado:
         me_gusta.put()
     else:
-        raise NotAuthenticatedException.no_autenticado()
+        raise AgendamlgException.sin_permisos(usuario.idGoogle)
 
 
-def eliminar_me_gusta(usuario,me_gusta):
+def eliminar_me_gusta(usuario, evento):
     """
     :param usuario: usuario que elimina el comentario
-    :param me_gusta: megusta que queremos eliminar en la base de datos
+    :param evento: evento que no me gusta
     :return:
     """
-    if usuario.tipo > 0 and usuario.tipo <4:
-        me_gusta.key.delete()
+    me_gusta = MeGusta.query(MeGusta.creador == usuario.key, ancestor=evento).fetch()
+    if 0 < usuario.tipo < 4 and evento.validado:
+        me_gusta[0].key.delete() if me_gusta else None
     else:
-        raise NotAuthenticatedException.no_autenticado()
+        raise AgendamlgException.sin_permisos(usuario.idGoogle)
 
 
 def buscar_numero_me_gusta_evento(evento):
@@ -33,4 +38,4 @@ def buscar_numero_me_gusta_evento(evento):
     :return:
     """
     q = MeGusta.query(ancestor=evento.key)
-    return len(q.fetch())
+    return q.count()
