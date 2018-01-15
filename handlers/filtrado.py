@@ -20,14 +20,15 @@ class FiltradoHandler(BaseHandler):
         # La barra baja indica que no se interesa asignar esa parte de la tupla
         _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=False)
 
-        if usuario and self.request.get('mostrarDeMiPreferencia'):
+        if usuario and bool(self.request.get('mostrarDeMiPreferencia')):
             # La lista de categorias se rellena en base a las preferencias del usuario
             filtrado['categorias'] = usuario.preferencias
 
         else:
             # El metodo de la fachada espera recibir una lista de claves de categoria, por la URL
             # se va a pasar el id de categoria
-            filtrado['categorias'] = [ndb.Key('Categoria', categoria_id, parent=agenda_key()) for categoria_id in categorias]
+            # MUY importante la conversion del string de la URL a entero!
+            filtrado['categorias'] = [ndb.Key('Categoria', int(categoria_id), parent=agenda_key()) for categoria_id in categorias]
 
         # Se procede a obtener la lista de resultados
 

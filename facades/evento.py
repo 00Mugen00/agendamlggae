@@ -117,7 +117,7 @@ def buscar_evento_categorias(usuario, **filtrado):
 
     # Si se da una lista de categorias y esta no es vacia considera tambien en la consulta
     if len(filtrado.get('categorias',[])) > 0:
-        consulta = consulta.filter(Evento.categorias.IN([cat.key for cat in filtrado['categorias']]))
+        consulta = consulta.filter(Evento.categorias.IN(filtrado['categorias']))
 
     # El orden por distancia o el filtrado por titulo debe hacerse fuera de DataStore por la forma en que este funciona
     # https://stackoverflow.com/questions/23317280/appengine-search-api-vs-datastore
