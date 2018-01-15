@@ -26,6 +26,9 @@ el cliente permite acceder todos los servicios de la lista.
  1. Instalar las dependencias de Python con `pip install -t lib -r requirements.txt`
  2. Instalar dependencias de node.js del proyecto _webapp_ con `npm install`
  3. Compilar la versión _debug_ (`npm run build-debug`) o _release_ (`npm run build`) del cliente
+ 4. Crear el archivo `tokens/tokens.json` que tiene las *API-Keys* de Google y Flickr. Tiene esta estructura:
+ `{ "jwt_token": "...", "google_api_key": "...", "flickr_api_key": "..."}`. El token JWT lo generas tu.
+ 5. Obtener los tokens Google OAuth de la consola de desarrollador y ponerlo en `tokens/oauth_tokens.json`.
 
 ## Quieres instalar AngularMaps (o cualquier otra nueva dependencia) y peta?
 Si después del pull `npm install` no funciona, haz lo siguiente: `npm i -f` y luego `npm install`
