@@ -15,6 +15,8 @@ from google.appengine.ext.ndb import GeoPt
 from handlers.base import BaseHandler
 from models import Categoria, Usuario, Evento, Comentario, MeGusta, agenda_key
 
+from util import to_utc
+
 
 def add_categories():
     Categoria(nombre=u'Teatro', parent=agenda_key()).put()
@@ -43,11 +45,112 @@ def cats_id(nums):
 
 
 def add_users():
-    Usuario(idGoogle=u'113090457812971237278', tipo=3, preferencias=cats_id([ 1, 2, 3 ]), parent=agenda_key()).put()
-    Usuario(idGoogle=u'107740629189585787589', tipo=2, preferencias=cats_id([ 1, 4, 5 ]), parent=agenda_key()).put()
-    Usuario(idGoogle=u'117448827855359481250', tipo=1, preferencias=cats_id([ 1, 7, 9 ]), parent=agenda_key()).put()
-    Usuario(idGoogle=u'101525104652157188456', tipo=3, preferencias=cats_id([ 1, 5, 9, 10, 11 ]), parent=agenda_key()) \
-        .put()
+    Usuario(
+        idGoogle=u'113090457812971237278',
+        tipo=3,
+        preferencias=cats_id([ 1, 2, 3 ]),
+        extra='''{"name":{
+    "givenName":"Melchor Alejo",
+    "familyName":"Garau Madrigal"
+},
+"objectType":"person",
+"cover":{
+    "coverPhoto":{
+        "width":940,
+        "height":528,
+        "url":"https:\\/\\/lh3.googleusercontent.com\\/-RKt2kXQGgMo\\/VshC8el42nI\\/AAAAAAAABjw\\/9VSDTPdr-_UNNLZtiu8Nf-oNWzne5GbTgCL0BGAYYCw\\/s630\\/_MG_0277.JPG"
+    },
+    "coverInfo":{
+        "topImageOffset":0,
+        "leftImageOffset":0
+    },
+    "layout":"banner"
+},
+"id":"113090457812971237278",
+"language":"es",
+"verified":false,
+"displayName":"Melchor Alejo Garau Madrigal",
+"etag":"\\"ucaTEV-ZanNH5M3SCxYRM0QRw2Y\\/-WMTbhKbV3F-nSgFKAbdNHtolr0\\"",
+"kind":"plus#person",
+"emails":[{"value":"melchor9000@gmail.com","type":"account"}],
+"isPlusUser":false,
+"image":{
+    "isDefault":false,
+    "url":"https:\\/\\/lh6.googleusercontent.com\\/-1BhWEle9e0o\\/AAAAAAAAAAI\\/AAAAAAAABMY\\/q0XcujFGVF4\\/photo.jpg?sz=50"
+}}''',
+        parent=agenda_key()
+    ).put()
+    Usuario(
+        idGoogle=u'107740629189585787589',
+        tipo=2,
+        preferencias=cats_id([ 1, 4, 5 ]),
+        extra='''{
+"kind":"plus#person",
+"id":"107740629189585787589",
+"url":"https://plus.google.com/107740629189585787589",
+"etag":"\\"ucaTEV-ZanNH5M3SCxYRM0QRw2Y\/Q6dN8bRf91294Qxkm32pTg6Nl50\\"",
+"verified":false,
+"circledByCount":0,
+"displayName":"John Carlo Purihin",
+"language":"en",
+"objectType":"person",
+"image":{
+  "url":"https:\\/\\/lh6.googleusercontent.com\\/-1wGmdHFkIlo\\/AAAAAAAAAAI\\/AAAAAAAAAWY\\/6IvBOUNYN_8\\/photo.jpg?sz=50",
+  "isDefault":false
+},
+"isPlusUser":true,
+"emails":[{"type":"account","value":"johncarlo.purihin@gmail.com"}],
+"name":{
+  "givenName":"John Carlo",
+  "familyName":"Purihin"
+}}''',
+        parent=agenda_key()
+    ).put()
+    Usuario(
+        idGoogle=u'117448827855359481250',
+        tipo=1,
+        preferencias=cats_id([ 1, 7, 9 ]),
+        extra='''{
+"isPlusUser":true,
+"etag":"\\"ucaTEV-ZanNH5M3SCxYRM0QRw2Y/sqB_1_K0t9pZSZneog4I2mo_Kbk\\"",
+"url":"https://plus.google.com/117448827855359481250",
+"verified":false,
+"circledByCount":0,
+"id":"117448827855359481250",
+"language":"es",
+"name":{
+  "familyName":"Cruzado Castillo",
+  "givenName":"Antonio Ángel"
+},
+"cover":{
+  "coverInfo":{
+    "leftImageOffset":0,
+    "topImageOffset":-350
+  },
+  "layout":"banner",
+  "coverPhoto":{
+    "height":530,
+    "url":"https:\\/\\/lh3.googleusercontent.com\\/i5UqU5j9Xc42_TMbzyTCGbav-zwCMCsY5UK9RILBrBSsVB9swRN66asRMA0Oh3_DlS3b_6sf1oo=s630-fcrop64=1,00000000ffffff49",
+    "width":940
+  }
+},
+"image":{
+  "isDefault":true,
+  "url":"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=50"
+},
+"emails":[{"type":"account","value":"a.angelcruzado@gmail.com"}],
+"displayName":"Antonio Ángel Cruzado Castillo",
+"objectType":"person",
+"kind":"plus#person"}''',
+        parent=agenda_key()
+    ).put()
+    Usuario(
+        idGoogle=u'101525104652157188456',
+        tipo=3,
+        preferencias=cats_id([ 1, 5, 9, 10, 11 ]),
+        extra='''''',
+        parent=agenda_key()
+    ).put()
 
 
 def user_id(uid):
@@ -56,14 +159,14 @@ def user_id(uid):
 
 def parse_datetime(time_str):
     match = re.match(r'(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+).\d*', time_str)
-    return dt(
+    return to_utc(dt(
         year=int(match.group(1)),
         month=int(match.group(2)),
         day=int(match.group(3)),
         hour=int(match.group(4)),
         minute=int(match.group(5)),
         second=int(match.group(6))
-    )
+    ))
 
 
 def add_events():
@@ -699,7 +802,7 @@ def add_comments(events):
         day = 1 + day % 31
         Comentario(
             texto=u'¡¡ Madre mia como mola !!',
-            fecha=dt(year=2018, month=month, day=day, hour=10 + i / 2, minute=rand(0, 59), second=rand(0, 59)),
+            fecha=to_utc(dt(year=2018, month=month, day=day, hour=10 + i / 2, minute=rand(0, 59), second=rand(0, 59))),
             creador=manu,
             parent=events[i]
         ).put()
@@ -707,21 +810,24 @@ def add_comments(events):
         if (i % 3) == 0:
             Comentario(
                 texto=u'Ostia tu, m\'agrada això, asistiré 😁',
-                fecha=dt(year=2018, month=month, day=day, hour=18 + (i % 5), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=18 + (i % 5), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=melchor,
                 parent=events[i]
             ).put()
         elif (i % 3) == 1:
             Comentario(
                 texto=u'Eh, una pena que no pueda ir, el horario me va mal :( Pero me gustaria ir, tiene buena pinta',
-                fecha=dt(year=2018, month=month, day=day, hour=12 + (i % 4), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=12 + (i % 4), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=john,
                 parent=events[i]
             ).put()
         elif (i % 3) == 2:
             Comentario(
                 texto=u'⬆️😁💪🏿',
-                fecha=dt(year=2018, month=month, day=day, hour=14 + (i % 7), minute=rand(0, 59), second=rand(0, 59)),
+                fecha=to_utc(dt(year=2018, month=month, day=day, hour=14 + (i % 7), minute=rand(0, 59),
+                                second=rand(0, 59))),
                 creador=antonio,
                 parent=events[i]
             ).put()

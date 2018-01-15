@@ -7,3 +7,4 @@ import evento
 import comentario
 import megusta
 import usuario
+import categoria

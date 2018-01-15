@@ -73,7 +73,7 @@ def get_user_from_token(token, raise_for_unauthenticated=True):
 
     :param token: JWT from `bearer` header
     :param raise_for_unauthenticated: if the token is invalid, raises the exception ('True' by default)
-    :return: (dict, models.Usuario) or None
+    :return: (dict, models.Usuario) or (None, None)
     :raises: facades.exception.NotAuthenticatedException if the token has expired
     :raises: facades.exception.NotAuthenticatedException if the token is invalid and must be valid
     """
@@ -83,3 +83,5 @@ def get_user_from_token(token, raise_for_unauthenticated=True):
         return from_json(usuario[0].extra), usuario[0]
     elif raise_for_unauthenticated:
         raise NotAuthenticatedException.no_autenticado()
+    else:
+        return None, None
