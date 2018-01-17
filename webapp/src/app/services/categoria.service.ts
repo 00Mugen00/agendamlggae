@@ -10,7 +10,7 @@ export class CategoriaService extends AbstractService{
     console.log('Conectado a CategoriaService');
   }
 
-  buscarCategoria(id: number){
+  buscarCategoria(id: string){
     return this.get<Categoria>('categoria', id);
   }
 

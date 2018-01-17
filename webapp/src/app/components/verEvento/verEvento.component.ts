@@ -16,7 +16,7 @@ import { Foto } from '../../interfaces/foto';
 export class VerEventoComponent implements OnInit {
 
   errorResponse: HttpErrorResponse;
-  id: number;
+  id: string;
   evento: Evento;
   nombreCreador: string;
   fotosDeEvento: FotosDeEvento;
@@ -29,7 +29,7 @@ export class VerEventoComponent implements OnInit {
               private eventoService: EventoService,
               private usuarioService: UsuarioService,
               route: ActivatedRoute) {
-                this.id = Number(route.snapshot.params['id']);
+                this.id = route.snapshot.params['id'];
                 this.evento = eventoVacio();
                 this.fotosDeEvento = fotosDeEventoVacio();
               }

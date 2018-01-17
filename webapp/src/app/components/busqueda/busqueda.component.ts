@@ -21,7 +21,7 @@ export class BusquedaComponent implements OnInit {
     latitud: number = null;
     longitud: number = null;
     mostrarDeMiPreferencia: boolean = false;
-    categoriasIds: number[] = [];
+    categoriasIds: string[] = [];
     eventos: Evento[] = [];
     geolocalizando: boolean = false;
     texto: string = "";
@@ -41,7 +41,7 @@ export class BusquedaComponent implements OnInit {
     }
 
     listar() {
-        this.route.snapshot.params['categoriasSeleccionadas'].split(",").map(Number).forEach((c: number) => this.categoriasIds.push(c));
+        this.route.snapshot.params['categoriasSeleccionadas'].split(",").forEach((c: string) => this.categoriasIds.push(c));
         let categoriasSeleccionadas = [];
         for(let i=0; i<this.categoriasIds.length; i++){
             let c = {

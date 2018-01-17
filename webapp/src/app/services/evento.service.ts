@@ -21,7 +21,7 @@ export class EventoService extends AbstractService {
         return this.get<Evento[]>('evento');
     }
 
-    buscarEvento(id: number) {
+    buscarEvento(id: string) {
         return this.get<Evento>('evento', id);
     }
 
@@ -33,11 +33,11 @@ export class EventoService extends AbstractService {
         return this.put<Evento>('evento', '', evento);
     }
 
-    borrarEvento(id: number) {
+    borrarEvento(id: string) {
         return this.delete<{ status: string }>('evento', id);
     }
 
-    validarEvento(id: number) {
+    validarEvento(id: string) {
         return this.put<Evento>('evento', `validar`, {id});
     }
 
@@ -61,7 +61,7 @@ export class EventoService extends AbstractService {
         return this.get<Evento[]>('evento', 'filtrar', {params});
     }
 
-    buscarFotosParaEvento(id: number) {
+    buscarFotosParaEvento(id: string) {
         return this.get<FotosDeEvento>('evento', `fotos/${id}`);
     }
 

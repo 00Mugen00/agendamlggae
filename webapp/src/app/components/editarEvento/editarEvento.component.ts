@@ -15,10 +15,10 @@ import {Categoria} from "../../interfaces/categoria";
 export class EditarEventoComponent implements OnInit {
 
     errorResponse: HttpErrorResponse;
-    private id: number;
+    private id: string;
     private evento: Evento;
     private categorias: Categoria[] = [];
-    private categoriasEvento: number[] = [];
+    private categoriasEvento: string[] = [];
     private urlFlickr: string;
     private fecha: Date;
 
@@ -30,7 +30,7 @@ export class EditarEventoComponent implements OnInit {
                 private usuarioService: UsuarioService,
                 private router : Router,
                 route: ActivatedRoute) {
-        this.id = Number(route.snapshot.params['id']);
+        this.id = route.snapshot.params['id'];
         this.evento = eventoVacio();
         this.fecha = new Date();
     }

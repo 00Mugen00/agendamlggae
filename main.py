@@ -22,19 +22,23 @@ class MainHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     routes.PathPrefixRoute('/agendamlg-api', [
+        webapp2.Route(r'', MainHandler),
         webapp2.Route(r'/', MainHandler),
         routes.PathPrefixRoute(r'/categoria', [
             webapp2.Route(r'/preferencias', handlers.PreferenciasHandler),
             webapp2.Route(r'/preferencias/<categoria_key:[a-zA-Z\-0-9]+>', handlers.PreferenciasHandler),
+            webapp2.Route(r'', handlers.CategoriasHandler),
             webapp2.Route(r'/', handlers.CategoriasHandler),
             webapp2.Route(r'/<categoria_key:[a-zA-Z\-0-9]+>', handlers.CategoriaHandler)
         ]),
         routes.PathPrefixRoute(r'/usuario', [
+            webapp2.Route(r'', handlers.UsuarioHandler),
             webapp2.Route(r'/', handlers.UsuarioHandler),
             webapp2.Route(r'/<uid:\d+>', handlers.UsuarioEspecificoHandler)
         ]),
         routes.PathPrefixRoute(r'/evento', [
             webapp2.Route(r'', handlers.EventoHandler),
+            webapp2.Route(r'/', handlers.EventoHandler),
             webapp2.Route(r'/filtrar', handlers.FiltradoHandler),
             webapp2.Route(r'/validar', handlers.ValidacionHandler),
             # Esta ruta permite obtener todos los eventos creados por el usuario actual
@@ -47,10 +51,12 @@ app = webapp2.WSGIApplication([
         webapp2.Route(r'/comentario/<eid:[a-zA-Z\-0-9]+/?>', handlers.ComentarioHandler),
         webapp2.Route(r'/megusta/<eid:[a-zA-Z\-0-9]+/?>', handlers.MeGustaHandler),
         routes.PathPrefixRoute(r'/seed', [
+            webapp2.Route(r'', handlers.SeedHandler),
             webapp2.Route(r'/', handlers.SeedHandler)
         ]),
         routes.PathPrefixRoute(r'/session', [
             webapp2.Route(r'/test', OAuthTest),
+            webapp2.Route(r'', OAuthLogin),
             webapp2.Route(r'/', OAuthLogin)
         ])
     ]),

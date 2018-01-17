@@ -17,7 +17,7 @@ export class CrearEventoComponent implements OnInit {
     errorResponse: HttpErrorResponse;
     private evento: Evento;
     private categorias: Categoria[] = [];
-    private categoriasEvento: number[] = [];
+    private categoriasEvento: string[] = [];
     private urlFlickr: string;
     private fecha: Date;
 

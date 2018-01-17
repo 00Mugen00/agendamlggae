@@ -1,7 +1,7 @@
 import { Categoria } from './categoria';
 
-export interface Evento{
-  id: number;
+export interface Evento {
+  id: string;
   nombre: string;
   descripcion: string;
   fecha: string;
@@ -18,7 +18,7 @@ export interface Evento{
   flickrAlbumID: string;
 }
 
-export interface Coordenadas{
+export interface Coordenadas {
     encontrado: boolean;
     latitud: number;
     longitud: number;
