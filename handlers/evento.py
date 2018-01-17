@@ -12,6 +12,7 @@ import re
 import flickr
 from facades.excepcion import AgendamlgException
 import util.json
+from salida_eventos_json import eventos_json
 
 class EventoHandler(BaseHandler):
 
@@ -61,10 +62,8 @@ class EventoHandler(BaseHandler):
 
         eventos = buscar_evento_categorias(usuario)
 
-        eventosRetorno = [evento_corto(ev) for ev in eventos]
-
         # Devolver respuesta
-        self.response.write(util.to_json(eventosRetorno))
+        self.response.write(eventos_json(eventos, True))
 
 
 def modificarDatosFlickr(evento, userId=None, albumId=None):

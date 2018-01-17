@@ -7,6 +7,7 @@ from facades.evento import evento_corto, buscar_eventos_usuario
 from facades.excepcion import AgendamlgNotFoundException
 from models import Usuario
 from tokens import get_user_from_token
+from salida_eventos_json import eventos_json
 
 
 class MisEventos(BaseHandler):
@@ -20,6 +21,4 @@ class MisEventos(BaseHandler):
 
         eventosUsuario = buscar_eventos_usuario(usuario, True)
 
-        listaRetorno = [evento_corto(ev) for ev in eventosUsuario]
-
-        self.response.write(util.to_json(listaRetorno))
+        self.response.write(eventos_json(eventosUsuario, True))

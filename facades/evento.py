@@ -200,7 +200,7 @@ def distancia(origin, destination):
     return d
 
 
-# Esta funcion permite asignar correctamente el atributo fotoUrl de un evento
+# Esta funcion permite asignar correctamente el atributo fotoUrl de un evento, en su version de diccionario
 def obtener_foto_url(evento):
     """
     Diccionario
@@ -209,9 +209,11 @@ def obtener_foto_url(evento):
     """
     retorno = None
 
-    if evento.flickrUserId is not None and evento.flickrAlbumId is not None:
+    if (evento.get('flickrUserID', None) is not None) and (evento.get('flickrAlbumID', None) is not None):
         try:
-            info = photosets.get_info(evento.flickrUserId, evento.flickrAlbumId)
+
+            info = photosets.get_info(str(evento['flickrUserID']), str(evento['flickrAlbumID']))
+
             if info is not None and info.primary:
                 retorno = info.primary.medium_size_url
 
@@ -232,7 +234,7 @@ def evento_largo_clave(clave):
     return evento_largo(clave.get())
 
 # Dada un evento devuelve un diccionario con una version resumida del evento
-def evento_corto(evento):
+def evento_corto(evento, adjuntar_datos_flickr = False):
 
     # Lanzar excepcion si no existe el evento
     if evento is None:
@@ -249,27 +251,24 @@ def evento_corto(evento):
         retorno['latitud'] = evento.coordenadas.lat
         retorno['longitud'] = evento.coordenadas.lon
 
-    foto_url = obtener_foto_url(evento)
+    # Si se pide que se adjunten los datos de flickr, se hace
+    if adjuntar_datos_flickr:
+        if evento.flickrAlbumId:
+            retorno['flickrAlbumID'] = evento.flickrAlbumId
 
-    if foto_url is not None:
-        retorno['fotoUrl'] = foto_url
+        if evento.flickrUserId:
+            retorno['flickrUserID'] = evento.flickrUserId
 
     return retorno
 
 # Dada un evento devuelve un diccionario con una version extendida del evento
 def evento_largo(evento):
-    retorno = evento_corto(evento)
+    retorno = evento_corto(evento, True)
 
     retorno['categoriaList'] = [categoria.urlsafe() for categoria in evento.categorias]
     retorno['creador'] = evento.key.parent().get().idGoogle
     # Descripcion completa
     retorno['descripcion'] = evento.descripcion
-
-    if evento.flickrAlbumId:
-        retorno['flickrAlbumID'] = evento.flickrAlbumId
-
-    if evento.flickrUserId:
-        retorno['flickrUserID'] = evento.flickrUserId
 
     retorno['validado'] = evento.validado
 
