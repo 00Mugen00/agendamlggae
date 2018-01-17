@@ -26,6 +26,7 @@ app = webapp2.WSGIApplication([
         webapp2.Route(r'/', MainHandler),
         routes.PathPrefixRoute(r'/categoria', [
             webapp2.Route(r'/preferencias', handlers.PreferenciasHandler),
+            webapp2.Route(r'/preferencias/', handlers.PreferenciasHandler),
             webapp2.Route(r'/preferencias/<categoria_key:[a-zA-Z\-0-9]+>', handlers.PreferenciasHandler),
             webapp2.Route(r'', handlers.CategoriasHandler),
             webapp2.Route(r'/', handlers.CategoriasHandler),
@@ -40,9 +41,12 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'', handlers.EventoHandler),
             webapp2.Route(r'/', handlers.EventoHandler),
             webapp2.Route(r'/filtrar', handlers.FiltradoHandler),
+            webapp2.Route(r'/filtrar/', handlers.FiltradoHandler),
             webapp2.Route(r'/validar', handlers.ValidacionHandler),
+            webapp2.Route(r'/validar/', handlers.ValidacionHandler),
             # Esta ruta permite obtener todos los eventos creados por el usuario actual
             webapp2.Route(r'/usuario', handlers.MisEventos),
+            webapp2.Route(r'/usuario/', handlers.MisEventos),
             webapp2.Route(r'/<claveEvento:[a-zA-Z\-0-9]+/?>', handlers.EventoConcretoHandler),
             # Eventos creados por un usuario, no el usuario logueado
             webapp2.Route(r'/usuario/<idGoogle:[0-9]+/?>', handlers.EventosUsuario),
