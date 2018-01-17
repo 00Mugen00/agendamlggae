@@ -5,13 +5,14 @@ import urllib
 import urllib2
 import collections
 import util.json
-import datetime
+
+from google.appengine.api import memcache
 
 from tokens import flickr_api_key
-from models import FlickrCache
 
 API_URL = u'https://api.flickr.com/services/rest/'
 API_KEY = flickr_api_key
+MINUTES_CACHE_DURATION = 30
 
 
 def do_request(method, params):
@@ -19,14 +20,9 @@ def do_request(method, params):
     params.update({ u'api_key': API_KEY, u'format': u'json', 'method': method })
     url = build_url(params)
 
-    current_time = datetime.datetime.today() - datetime.timedelta(minutes=10)
-    old = FlickrCache.query(FlickrCache.created < current_time).fetch()
-    for old_entry in old:
-        old_entry.key.delete()
-
-    in_cache = FlickrCache.query(FlickrCache.url == url).fetch()
-    if len(in_cache) > 0:
-        return util.json.from_json(in_cache[0].value)
+    memcache_value = memcache.get(u'flickr:{}'.format(url))
+    if memcache_value:
+        return util.json.from_json(memcache_value)
 
     req = urllib2.Request(API_URL + url)
     req.add_header('User-Agent', 'pyckr-melchor9000')
@@ -35,7 +31,7 @@ def do_request(method, params):
     res.close()
     res_json = res_json[14:-1]
     parsed = util.json.from_json(res_json)
-    FlickrCache(url=url, value=res_json).put()
+    memcache.set(u'flickr:{}'.format(url), res_json, time=MINUTES_CACHE_DURATION*60)
     return parsed
 
 

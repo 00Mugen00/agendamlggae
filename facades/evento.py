@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from models import Evento, Categoria, Usuario
+from models import Evento, Categoria
 from excepcion import AgendamlgException, AgendamlgNotFoundException, NotAuthenticatedException
 import datetime
 from datetime import datetime as dt
@@ -17,9 +17,12 @@ import util
 # Maximo numero de caracteres que pueden aparecer en descripcion del evento
 MAX_CARACTERES_DESCRIPCION = 150
 
+
 def enviar_correo_interesados(evento):
     categorias = Categoria.query(Categoria.nombre.IN(evento.categorias)).fetch()
-    send_mail(usuario.buscar_usuarios_preferencias(categorias),u'Hay un evento que te puede gustar',evento.nombre+u' es un evento de tu preferencia')
+    send_mail(usuario.buscar_usuarios_preferencias(categorias),
+              u'Hay un evento que te puede gustar',
+              evento.nombre+u' es un evento de tu preferencia')
 
 
 def enviar_correo_creador(evento,creador):
@@ -209,10 +212,10 @@ def obtener_foto_url(evento):
     """
     retorno = None
 
-    if (evento.get('flickrUserID', None) is not None) and (evento.get('flickrAlbumID', None) is not None):
+    if (evento.get('flickrUserID') is not None) and (evento.get('flickrAlbumID') is not None):
         try:
 
-            info = photosets.get_info(str(evento['flickrUserID']), str(evento['flickrAlbumID']))
+            info = photosets.get_info(evento['flickrUserID'], evento['flickrAlbumID'])
 
             if info is not None and info.primary:
                 retorno = info.primary.medium_size_url
