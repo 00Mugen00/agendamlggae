@@ -3,7 +3,7 @@
 
 import util.json
 from base import BaseHandler
-from facades.evento import buscar_evento_categorias
+from facades.evento import buscar_evento_categorias, evento_corto
 from models import Usuario, agenda_key
 from tokens import get_user_from_token
 from google.appengine.ext import ndb
@@ -34,14 +34,7 @@ class FiltradoHandler(BaseHandler):
 
         eventos = buscar_evento_categorias(usuario, **filtrado)
 
-        retorno = [{'descripcion': evento.descripcion,
-                    'direccion': evento.direccion,
-                    'fecha': evento.fecha.isoformat(),
-                    'latitud': evento.coordenadas.lat if evento.coordenadas else None,
-                    'longitud': evento.coordenadas.lon if evento.coordenadas else None,
-                    'nombre': evento.nombre,
-                    'precio': evento.precio,
-                    'id': evento.key.id()} for evento in eventos]
+        retorno = [evento_corto(evento) for evento in eventos]
 
         self.response.write(util.json.to_json(retorno))
 

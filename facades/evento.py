@@ -10,7 +10,11 @@ from google.appengine.ext import ndb
 from operator import itemgetter
 from mail import send_mail
 from facades import usuario
+from flickr import photosets
+import truncar
 
+# Maximo numero de caracteres que pueden aparecer en descripcion del evento
+MAX_CARACTERES_DESCRIPCION = 150
 
 def enviar_correo_interesados(evento):
     categorias = Categoria.query(Categoria.nombre.IN(evento.categorias)).fetch()
@@ -19,27 +23,28 @@ def enviar_correo_interesados(evento):
 
 def enviar_correo_creador(evento,creador):
     usuarios = [creador]
-    send_mail(usuarios,u'Tu evento ha sido publicado',u'El evento '+evento.nombre+' ha sido publicado')
+    send_mail(usuarios,u'Tu evento ha sido publicado',u'El evento '+evento.nombre+u' ha sido publicado')
 
 
-def crear_evento_tipo_usuario(usuario, evento, categorias_evento):
+def crear_evento_tipo_usuario(usuario, evento):
     """
     :param usuario: Usuario
     :param evento: Evento
-    :param categorias_evento: list str
     :return:
     """
     if evento.tipo < 1 or evento.tipo > 3:
         raise AgendamlgException.tipo_invalido(evento.tipo)
-    categorias = Categoria.query(Categoria.nombre.IN(categorias_evento)).fetch()
+
+
     if usuario.tipo == 1:
         evento.validado = False
     elif usuario.tipo > 1 and usuario.tipo <4:
         evento.validado = True
     else:
         raise NotAuthenticatedException.no_autenticado()
+
     evento.put()
-    evento.categorias = [categoria.key for categoria in categorias]
+
     #enviar_correo_interesados(evento)
 
 
@@ -155,6 +160,22 @@ def buscar_evento_categorias(usuario, **filtrado):
     return resultados
 
 
+def validar_evento(clave_evento):
+    """
+    Dada una clave de evento como urlsafe, se procede a la validacion de este
+    :param usuario:
+    :param id_evento:
+    :return:
+    """
+    try:
+        evento = ndb.Key(urlsafe=clave_evento).get()
+        evento.validado = True
+        evento.put()
+
+    except:
+        # Si hay una excepcion, se lanza que el evento no se ha encontrado en la agenda o similar
+        raise AgendamlgNotFoundException.evento_no_existe(clave_evento)
+
 def distancia(origin, destination):
     # type: (object, object) -> object
     """
@@ -176,3 +197,80 @@ def distancia(origin, destination):
     d = radius * c
 
     return d
+
+
+# Esta funcion permite asignar correctamente el atributo fotoUrl de un evento
+def obtener_foto_url(evento):
+    """
+    Diccionario
+    :param evento: dic
+    :return:
+    """
+    retorno = None
+
+    if evento.flickrUserId is not None and evento.flickrAlbumId is not None:
+        try:
+            info = photosets.get_info(evento.flickrUserId, evento.flickrAlbumId)
+            if info is not None and info.primary:
+                retorno = info.primary.medium_size_url
+
+        except:
+            pass
+
+    return retorno
+
+# Dado un texto devuelve la version corta de este
+
+
+# Dada una clave de evento devuelve un diccionario con una version resumida del evento
+def evento_corto_clave(clave):
+    return evento_corto(clave.get())
+
+# Dada una clave de evento devuelve un diccionario con una version extendida del evento
+def evento_largo_clave(clave):
+    return evento_largo(clave.get())
+
+# Dada un evento devuelve un diccionario con una version resumida del evento
+def evento_corto(evento):
+
+    retorno = {'descripcion': truncar.trunc(evento.descripcion,max_pos=MAX_CARACTERES_DESCRIPCION),
+     'direccion': evento.direccion,
+     'fecha': evento.fecha.isoformat(),
+     'nombre': evento.nombre,
+     'precio': evento.precio,
+     'id': evento.key.urlsafe()}
+
+    if evento.coordenadas:
+        retorno['latitud'] = evento.coordenadas.lat
+        retorno['longitud'] = evento.coordenadas.lon
+
+    foto_url = obtener_foto_url(evento)
+
+    if foto_url is not None:
+        retorno['fotoUrl'] = foto_url
+
+    return retorno
+
+# Dada un evento devuelve un diccionario con una version extendida del evento
+def evento_largo(evento):
+    retorno = evento_corto(evento)
+
+    retorno['categoriaList'] = [categoria.key.urlsafe() for categoria in evento.categorias]
+    retorno['creador'] = evento.key.parent().get().idGoogle
+    # Descripcion completa
+    retorno['descripcion'] = evento.descripcion
+
+    if evento.flickrAlbumId:
+        retorno['flickrAlbumID'] = evento.flickrAlbumId
+
+    if evento.flickrUserId:
+        retorno['flickrUserID'] = evento.flickrUserId
+
+    retorno['validado'] = evento.validado
+
+   # A continuacion se añade lo que le falta al evento corto
+
+    return retorno
+
+
+

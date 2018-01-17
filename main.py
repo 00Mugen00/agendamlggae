@@ -34,8 +34,9 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/<uid:\d+>', handlers.UsuarioEspecificoHandler)
         ]),
         routes.PathPrefixRoute(r'/evento', [
-            webapp2.Route(r'/', handlers.EventoHandler),
-            webapp2.Route(r'/filtrar', handlers.FiltradoHandler)
+            webapp2.Route(r'', handlers.EventoHandler),
+            webapp2.Route(r'/filtrar', handlers.FiltradoHandler),
+            webapp2.Route(r'/validar', handlers.ValidacionHandler)
         ]),
         webapp2.Route(r'/comentario/<eid:[a-zA-Z\-0-9]+/?>', handlers.ComentarioHandler),
         routes.PathPrefixRoute(r'/seed', [
