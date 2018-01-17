@@ -7,6 +7,7 @@ from facades.evento import buscar_evento_categorias, evento_corto
 from models import Usuario, agenda_key
 from tokens import get_user_from_token
 from google.appengine.ext import ndb
+from salida_eventos_json import eventos_json
 
 
 class FiltradoHandler(BaseHandler):
@@ -34,8 +35,6 @@ class FiltradoHandler(BaseHandler):
 
         eventos = buscar_evento_categorias(usuario, **filtrado)
 
-        retorno = [evento_corto(evento) for evento in eventos]
-
-        self.response.write(util.json.to_json(retorno))
+        self.response.write(eventos_json(eventos))
 
 

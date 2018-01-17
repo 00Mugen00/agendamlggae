@@ -3,7 +3,7 @@
 
 import util.json
 from base import BaseHandler
-from facades.evento import evento_largo_clave, clave_evento_o_fallo
+from facades.evento import evento_largo_clave, clave_evento_o_fallo, obtener_foto_url
 from models import Usuario, agenda_key
 from tokens import get_user_from_token
 from google.appengine.ext import ndb
@@ -22,6 +22,12 @@ class EventoConcretoHandler(BaseHandler):
         if usuario is not None and usuario.tipo != 3 and not eventoDic['validado']:
             # El usuario no tiene permisos para ver un evento sin validar
             raise AgendamlgException.sin_permisos(usuario)
+
+        # Muy importante, poner a este evento su fotoUrl
+        foto_url = obtener_foto_url(eventoDic)
+
+        if foto_url is not None:
+            eventoDic['fotoUrl'] = foto_url
 
         self.response.write(util.to_json(eventoDic))
 
