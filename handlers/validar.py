@@ -3,7 +3,7 @@
 
 import util.json
 from base import BaseHandler
-from facades.evento import validar_evento, evento_corto_clave
+from facades.evento import validar_evento, evento_corto_clave, clave_evento_o_fallo
 from models import Usuario, agenda_key
 from tokens import get_user_from_token
 from google.appengine.ext import ndb
@@ -32,4 +32,4 @@ class ValidacionHandler(BaseHandler):
         # Si tiene id y demas se procede a su validacion
         validar_evento(contenido_json['id'])
 
-        self.response.write(util.json.to_json(evento_corto_clave(ndb.Key(urlsafe=contenido_json['id']))))
+        self.response.write(util.json.to_json(evento_corto_clave(clave_evento_o_fallo(contenido_json['id']))))

@@ -6,7 +6,7 @@ from models import Evento, agenda_key
 from tokens import get_user_from_token
 from util import parse_date
 from google.appengine.ext import ndb
-from facades.evento import crear_evento_tipo_usuario, evento_largo_clave
+from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, evento_corto
 # Expresiones regulares
 import re
 import flickr
@@ -52,6 +52,20 @@ class EventoHandler(BaseHandler):
 
         # Devolver evento recien creado completo
         self.response.write(util.json.to_json(evento_largo_clave(evento.key)))
+
+
+    # Obtener todos los eventos existentes en el sistema, es el equivalente a filtrar
+    # con un filtro vacio, sirve estando logueado o no
+    def get(self):
+        _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=False)
+
+        eventos = buscar_evento_categorias(usuario)
+
+        eventosRetorno = [evento_corto(ev) for ev in eventos]
+
+        # Devolver respuesta
+        self.response.write(util.to_json(eventosRetorno))
+
 
 def modificarDatosFlickr(evento, userId=None, albumId=None):
     """

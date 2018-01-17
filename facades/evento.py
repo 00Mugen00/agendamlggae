@@ -12,6 +12,7 @@ from mail import send_mail
 from facades import usuario
 from flickr import photosets
 import truncar
+import util
 
 # Maximo numero de caracteres que pueden aparecer en descripcion del evento
 MAX_CARACTERES_DESCRIPCION = 150
@@ -233,9 +234,13 @@ def evento_largo_clave(clave):
 # Dada un evento devuelve un diccionario con una version resumida del evento
 def evento_corto(evento):
 
+    # Lanzar excepcion si no existe el evento
+    if evento is None:
+        raise AgendamlgNotFoundException.evento_no_existe(evento)
+
     retorno = {'descripcion': truncar.trunc(evento.descripcion,max_pos=MAX_CARACTERES_DESCRIPCION),
      'direccion': evento.direccion,
-     'fecha': evento.fecha.isoformat(),
+     'fecha': util.to_utc(evento.fecha).isoformat(),
      'nombre': evento.nombre,
      'precio': evento.precio,
      'id': evento.key.urlsafe()}
@@ -255,7 +260,7 @@ def evento_corto(evento):
 def evento_largo(evento):
     retorno = evento_corto(evento)
 
-    retorno['categoriaList'] = [categoria.key.urlsafe() for categoria in evento.categorias]
+    retorno['categoriaList'] = [categoria.urlsafe() for categoria in evento.categorias]
     retorno['creador'] = evento.key.parent().get().idGoogle
     # Descripcion completa
     retorno['descripcion'] = evento.descripcion
@@ -272,5 +277,14 @@ def evento_largo(evento):
 
     return retorno
 
+# Dada una clave de un evento como urlsafe devuelve el evento o una excepcion
 
+def clave_evento_o_fallo(eid):
+    try:
+        k = ndb.Key(urlsafe=eid)
+        if not k.get():
+            raise AgendamlgNotFoundException.evento_no_existe(eid)
+        return k
+    except Exception:
+        raise AgendamlgNotFoundException.evento_no_existe(eid)
 
