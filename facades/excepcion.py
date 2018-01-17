@@ -34,6 +34,16 @@ class AgendamlgException(Exception):
         return AgendamlgException(u"El usuario de Flickr '{}' no se ha podido encontrar".format(username), 5)
 
     @staticmethod
+    def comentario_campos_invalidos(t=None):
+        # type: (Exception) -> AgendamlgException
+        return AgendamlgException(u"Hay campos inválidos en el comentario", 6, t)
+
+    @staticmethod
+    def usuario_ya_ha_comentado(usuario, t=None):
+        # type: (unicode|str, Exception) -> AgendamlgException
+        return AgendamlgException(u"El usuario {} ya ha comentado este evento".format(usuario), 7, t)
+
+    @staticmethod
     def otro_error(mensaje, t):
         return AgendamlgException(mensaje, 1000, t)
 
@@ -62,7 +72,7 @@ class AgendamlgNotFoundException(Exception):
 
     @staticmethod
     def comentario_no_existe(comentario_id):
-        return AgendamlgNotFoundException(u'No existe el comentario "{}"'.format(comentario_id), 13)
+        return AgendamlgNotFoundException(u'No existe el comentario para el evento "{}"'.format(comentario_id), 13)
 
     @staticmethod
     def me_gusta_no_existe(mg_id):

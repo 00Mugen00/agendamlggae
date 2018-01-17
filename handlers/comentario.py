@@ -18,13 +18,13 @@ class ComentarioHandler(BaseHandler):
         _, usuario_sesion = get_user_from_token(self.request.headers.get('bearer'))
         nuevo_comentario = self.json_body()
         evento = ComentarioHandler.__evento_o_fallo(eid)
-        comentarios = comentario.crear_editar_megusta(usuario_sesion, evento, nuevo_comentario)
+        comentarios = comentario.crear_comentario(usuario_sesion, evento, nuevo_comentario)
         self.response.write(ComentarioHandler.__comentarios_a_json([ comentarios ]))
 
     def delete(self, eid):
         _, usuario_sesion = get_user_from_token(self.request.headers.get('bearer'))
-        comentario_a_eliminar = ComentarioHandler.__comentario_o_fallo(eid)
-        comentario.eliminar_comentario(usuario_sesion, comentario_a_eliminar)
+        evento = ComentarioHandler.__evento_o_fallo(eid)
+        comentario.eliminar_comentario(usuario_sesion, evento)
         self.response.write(u'{"deleted": true}')
 
     @staticmethod
@@ -36,16 +36,6 @@ class ComentarioHandler(BaseHandler):
             return k
         except Exception:
             raise AgendamlgNotFoundException.evento_no_existe(eid)
-
-    @staticmethod
-    def __comentario_o_fallo(cid):
-        try:
-            k = Key(urlsafe=(cid if '/' not in cid else cid[0:-1]))
-            if not k.get():
-                raise AgendamlgNotFoundException.comentario_no_existe(cid)
-            return k
-        except Exception:
-            raise AgendamlgNotFoundException.comentario_no_existe(cid)
 
     @staticmethod
     def __comentarios_a_json(comentarios):

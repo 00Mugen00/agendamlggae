@@ -148,7 +148,22 @@ def add_users():
         idGoogle=u'101525104652157188456',
         tipo=3,
         preferencias=cats_id([ 1, 5, 9, 10, 11 ]),
-        extra='''''',
+        extra='''{
+  "kind": "plus#person",
+  "language": "es",
+  "objectType": "person",
+  "isPlusUser": false,
+  "etag": "\\"ucaTEV-ZanNH5M3SCxYRM0QRw2Y\\/VJM8hSS50SgLz3dLJtm07mXz4Bc\\"",
+  "id": "101525104652157188456",
+  "image": {
+    "isDefault":true,
+    "url":"https:\\/\\/lh3.googleusercontent.com\\/-XdUIqdMkCWA\\/AAAAAAAAAAI\\/AAAAAAAAAAA\\/4252rscbv5M\\/photo.jpg?sz=50"
+  },
+  "emails": [ { "type": "account", "value": "rodriguez91job@gmail.com" } ],
+  "name":{"givenName": "Manuel","familyName":"Rodriguez"},
+  "displayName": "Manuel Rodriguez",
+  "verified": false
+}''',
         parent=agenda_key()
     ).put()
 

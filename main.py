@@ -39,6 +39,7 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/validar', handlers.ValidacionHandler)
         ]),
         webapp2.Route(r'/comentario/<eid:[a-zA-Z\-0-9]+/?>', handlers.ComentarioHandler),
+        webapp2.Route(r'/megusta/<eid:[a-zA-Z\-0-9]+/?>', handlers.MeGustaHandler),
         routes.PathPrefixRoute(r'/seed', [
             webapp2.Route(r'/', handlers.SeedHandler)
         ]),
