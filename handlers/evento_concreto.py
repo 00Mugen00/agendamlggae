@@ -4,10 +4,8 @@
 import util.json
 from base import BaseHandler
 from facades.evento import evento_largo_clave, clave_evento_o_fallo, obtener_foto_url
-from models import Usuario, agenda_key
-from tokens import get_user_from_token
-from google.appengine.ext import ndb
 from facades.excepcion import AgendamlgException, AgendamlgNotFoundException
+from tokens import get_user_from_token
 
 
 class EventoConcretoHandler(BaseHandler):

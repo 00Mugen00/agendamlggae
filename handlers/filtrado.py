@@ -3,8 +3,8 @@
 
 import util.json
 from base import BaseHandler
-from facades.evento import buscar_evento_categorias, evento_corto
-from models import Usuario, agenda_key
+from facades.evento import buscar_evento_categorias
+from models import agenda_key
 from tokens import get_user_from_token
 from google.appengine.ext import ndb
 from salida_eventos_json import eventos_json

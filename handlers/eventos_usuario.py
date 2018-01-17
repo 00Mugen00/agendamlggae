@@ -3,7 +3,7 @@
 
 import util.json
 from base import BaseHandler
-from facades.evento import evento_corto, buscar_eventos_usuario
+from facades.evento import buscar_eventos_usuario
 from facades.excepcion import AgendamlgNotFoundException
 from models import Usuario
 from tokens import get_user_from_token

@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from base import BaseHandler
-from models import Evento, agenda_key
+from models import Evento
 from tokens import get_user_from_token
 from util import parse_date
 from google.appengine.ext import ndb
-from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, evento_corto
+from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias
 # Expresiones regulares
 import re
 import flickr
