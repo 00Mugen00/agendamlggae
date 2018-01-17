@@ -18,20 +18,25 @@ class ParallelTasks(object):
             func(*args)
             ParallelTasks.queue.task_done()
 
+    @staticmethod
+    def end_work():
+        if ParallelTasks.queue:
+            ParallelTasks.queue.join()
+            ParallelTasks.queue = None
 
-def async_init(threads=10):
-    """ Initialices the async queue """
-    ParallelTasks.queue = Queue(threads)
-    for _ in range(threads):
-        thread = Thread(target=ParallelTasks.do_work)
-        thread.daemon = True
-        thread.start()
+    @staticmethod
+    def start_work(threads=10):
+        if not ParallelTasks.queue:
+            ParallelTasks.queue = Queue()
+            for _ in range(threads):
+                thread = Thread(target=ParallelTasks.do_work)
+                thread.daemon = True
+                thread.start()
 
 
 def async_call(func):
     """ Decorator that makes a function to be run in parallel when called """
-    if not ParallelTasks.queue:
-        async_init()
+    ParallelTasks.start_work()
 
     def call(*args):
         ParallelTasks.queue.put((func, args))
