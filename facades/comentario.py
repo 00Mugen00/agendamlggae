@@ -62,7 +62,7 @@ def buscar_comentarios_evento(usuario, evento):
     evento = evento.get()
     tipo = usuario.tipo if usuario else 1
     if evento is not None and (tipo == 3 or evento.validado or usuario.key == evento.key.parent()):
-        q = Comentario.query(ancestor=evento.key)
+        q = Comentario.query(ancestor=evento.key).order(-Comentario.fecha)
         return q.fetch()
     else:
         raise AgendamlgNotFoundException.evento_no_existe(evento.urlsafe())
