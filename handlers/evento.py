@@ -45,7 +45,7 @@ class EventoHandler(BaseHandler):
             evento.coordenadas = None
 
        # Rellenar las categorias del evento (lista de claves de categorias)
-        evento.categorias = [ndb.Key(urlsafe=claveURLSafe) for claveURLSafe in evento_from_json.get('categorias', [])]
+        evento.categorias = [ndb.Key(urlsafe=claveURLSafe) for claveURLSafe in evento_from_json.get('categoriaList', [])]
         # Gestionar datos de flickr
         modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None), evento_from_json.get('flickrAlbumID', None))
 
