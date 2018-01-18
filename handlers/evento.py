@@ -104,7 +104,6 @@ def modificarDatosFlickr(evento, userId=None, albumId=None):
             if userId and not (expresion.match(userId)):
                 # Se obtiene empleando la API de flickr el user ID
                 url_peticion = "http://www.flickr.com/photos/{}/".format(userId)
-                print 'He hecho peticion!!!'
                 # ID usuario
                 idUsuario = flickr.urls.lookup_user(url_peticion)
 
@@ -117,6 +116,7 @@ def modificarDatosFlickr(evento, userId=None, albumId=None):
 
 class CoordenadasLatLong(BaseHandler):
     def get(self, direccion):
+
         _, usuario = get_user_from_token(self.request.headers.get('bearer'))
         coordenadas = encontrar_coordenadas(direccion)
         encontrado = True
