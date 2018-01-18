@@ -13,6 +13,7 @@ import flickr
 from facades.excepcion import AgendamlgException
 import util.json
 from salida_eventos_json import eventos_json
+from geocode import encontrar_coordenadas
 
 class EventoHandler(BaseHandler):
 
@@ -47,6 +48,12 @@ class EventoHandler(BaseHandler):
         evento.categorias = [ndb.Key(urlsafe=claveURLSafe) for claveURLSafe in evento_from_json.get('categorias', [])]
         # Gestionar datos de flickr
         modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None), evento_from_json.get('flickrAlbumID', None))
+
+        # Fijar las coordenadas del evento
+        coordenadas_evento = encontrar_coordenadas(evento.direccion)
+
+        if coordenadas_evento is not None:
+            evento.coordenadas = coordenadas_evento
 
         # Persistir el evento
         crear_evento_tipo_usuario(usuario, evento)

@@ -275,7 +275,8 @@ def evento_largo(evento):
 
     retorno['validado'] = evento.validado
 
-   # A continuacion se añade lo que le falta al evento corto
+   # Devolver tambien el tipo del evento!
+    retorno['tipo'] = evento.tipo
 
     return retorno
 
