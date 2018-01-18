@@ -14,7 +14,8 @@ class FiltradoHandler(BaseHandler):
 
     def get(self):
         filtrado = self.request.GET
-        categorias = self.request.get_all('categorias')
+        # Lista de claves de categorias en URLSafe
+        categorias = self.request.get_all('categoriasSeleccionadas')
 
         # Si el usuario no esta autenticado no se lanza excepcion, de ahi el False
         # La barra baja indica que no se interesa asignar esa parte de la tupla
@@ -26,9 +27,8 @@ class FiltradoHandler(BaseHandler):
 
         else:
             # El metodo de la fachada espera recibir una lista de claves de categoria, por la URL
-            # se va a pasar el id de categoria
-            # MUY importante la conversion del string de la URL a entero!
-            filtrado['categorias'] = [ndb.Key('Categoria', int(categoria_id), parent=agenda_key()) for categoria_id in
+            # se va a pasar la clave de categoria como urlSafe
+            filtrado['categorias'] = [ndb.Key(urlsafe=categoria_clave) for categoria_clave in
                                       categorias]
 
         # Se procede a obtener la lista de resultados
