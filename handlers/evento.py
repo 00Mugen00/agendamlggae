@@ -6,7 +6,7 @@ from models import Evento
 from tokens import get_user_from_token
 from util import parse_date
 from google.appengine.ext import ndb
-from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias
+from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, obtener_foto_url
 # Expresiones regulares
 import re
 import flickr
@@ -58,8 +58,16 @@ class EventoHandler(BaseHandler):
         # Persistir el evento
         crear_evento_tipo_usuario(usuario, evento)
 
+        eventoDic = evento_largo_clave(evento.key)
+
+        # Ponerle su fotoUrl!
+        foto_url = obtener_foto_url(eventoDic)
+
+        if foto_url is not None:
+            eventoDic['fotoUrl'] = foto_url
+
         # Devolver evento recien creado completo
-        self.response.write(util.json.to_json(evento_largo_clave(evento.key)))
+        self.response.write(util.json.to_json(eventoDic))
 
 
     # Obtener todos los eventos existentes en el sistema, es el equivalente a filtrar
