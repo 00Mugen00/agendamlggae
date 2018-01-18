@@ -272,7 +272,7 @@ def evento_corto(evento, adjuntar_datos_flickr=False):
 def evento_largo(evento, usuario_sesion=None):
     retorno = evento_corto(evento, True)
 
-    retorno['categoriaList'] = [{'id': categoria.urlsafe()} for categoria in evento.categorias]
+    retorno['categoriaList'] = [{'id': categoria.urlsafe(), 'nombre': categoria.get().nombre } for categoria in evento.categorias]
     retorno['creador'] = evento.key.parent().get().idGoogle
     # Descripcion completa
     retorno['descripcion'] = evento.descripcion
