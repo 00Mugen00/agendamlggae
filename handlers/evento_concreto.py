@@ -16,7 +16,7 @@ class EventoConcretoHandler(BaseHandler):
         # Devuelve un evento concreto en version larga, proporcionada su clave en urlsafe
 
         claveEvento = clave_evento_o_fallo(claveEvento)
-        eventoDic = evento_largo_clave(claveEvento)
+        eventoDic = evento_largo_clave(claveEvento, usuario)
 
         # Si el evento no esta validado lanzar excepcion, al no ser que el usuario este logueado y
         # sea o el creador o periodista

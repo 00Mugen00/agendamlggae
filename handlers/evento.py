@@ -58,7 +58,7 @@ class EventoHandler(BaseHandler):
         # Persistir el evento
         crear_evento_tipo_usuario(usuario, evento)
 
-        eventoDic = evento_largo_clave(evento.key)
+        eventoDic = evento_largo_clave(evento.key, usuario)
 
         # Ponerle su fotoUrl!
         foto_url = obtener_foto_url(eventoDic)

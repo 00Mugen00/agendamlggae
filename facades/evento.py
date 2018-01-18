@@ -13,7 +13,7 @@ from facades import usuario
 from flickr import photosets
 import truncar
 import util
-from megusta import buscar_numero_me_gusta_evento
+from megusta import buscar_numero_me_gusta_evento, usuario_ha_dado_me_gusta
 
 # Maximo numero de caracteres que pueden aparecer en descripcion del evento
 MAX_CARACTERES_DESCRIPCION = 150
@@ -234,8 +234,8 @@ def evento_corto_clave(clave):
     return evento_corto(clave.get())
 
 # Dada una clave de evento devuelve un diccionario con una version extendida del evento
-def evento_largo_clave(clave):
-    return evento_largo(clave.get())
+def evento_largo_clave(clave, usuario_sesion = None):
+    return evento_largo(clave.get(), usuario_sesion)
 
 # Dada un evento devuelve un diccionario con una version resumida del evento
 def evento_corto(evento, adjuntar_datos_flickr = False):
@@ -266,7 +266,7 @@ def evento_corto(evento, adjuntar_datos_flickr = False):
     return retorno
 
 # Dada un evento devuelve un diccionario con una version extendida del evento
-def evento_largo(evento):
+def evento_largo(evento, usuario_sesion=None):
     retorno = evento_corto(evento, True)
 
     retorno['categoriaList'] = [categoria.urlsafe() for categoria in evento.categorias]
@@ -280,7 +280,12 @@ def evento_largo(evento):
     retorno['tipo'] = evento.tipo
 
     # Fijar los me gusta que tiene el evento
-    retorno['meGusta'] = buscar_numero_me_gusta_evento(evento)
+    retorno['likes'] = buscar_numero_me_gusta_evento(evento)
+
+    # Si se ha proporcionado un usuarion, se muestra si este le ha dado me gusta o no al evento
+    if usuario_sesion is not None:
+        # Indicar si el usuario que tiene la sesion iniciada le ha dado me gusta a este evento
+        retorno['meGusta'] = usuario_ha_dado_me_gusta(usuario_sesion, evento)
 
     return retorno
 

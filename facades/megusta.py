@@ -39,3 +39,18 @@ def buscar_numero_me_gusta_evento(evento):
     """
     q = MeGusta.query(ancestor=evento.key)
     return q.count()
+
+
+def usuario_ha_dado_me_gusta(usuario, evento):
+    """
+    Indica si un usuario le ha dado a me gusta al evento proporcionado
+
+    :param usuario: Usuario
+    :param evento: Evento
+    :return: bool
+    """
+    # Obtener los me gusta para el evento proporcionado
+    me_gusta = MeGusta.query(ancestor=evento.key).fetch()
+
+    # Filtrar me gusta proporcionados por el usuario (comprobar creador)
+    return len(filter(lambda x: x.creador == usuario.key, me_gusta)) > 0
