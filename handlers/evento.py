@@ -39,11 +39,7 @@ class EventoHandler(BaseHandler):
         evento.direccion = evento_from_json.get('direccion', None)
         # Si esta validado o no se gestiona en el el metodo de la fachada
 
-        if (evento_from_json.get('latitud', None) is not None) and (evento_from_json.get('longitud', None) is not None):
-            # Se ha proporcionado latitud y longitud para el evento a crear
-            evento.coordenadas = ndb.GeoPt(evento_from_json['latitud'], evento_from_json['longitud'])
-        else:
-            evento.coordenadas = None
+        evento.coordenadas = None
 
         # Rellenar las categorias del evento (lista de claves de categorias)
         # Ojo! las categorias tienen la siguiente forma
@@ -55,7 +51,7 @@ class EventoHandler(BaseHandler):
                              evento_from_json.get('flickrAlbumID', None))
 
         # Fijar las coordenadas del evento
-        coordenadas_evento = encontrar_coordenadas(evento.direccion)
+        coordenadas_evento = encontrar_coordenadas(evento.direccion, True)
 
         if coordenadas_evento is not None:
             evento.coordenadas = coordenadas_evento

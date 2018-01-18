@@ -11,9 +11,16 @@ API_URL = u'https://maps.googleapis.com/maps/api/geocode/json?'
 API_KEY = google_api_key
 
 
-def encontrar_coordenadas(direccion):
+def encontrar_coordenadas(direccion, creacion = False):
 
-    param = {'address': direccion, 'key': API_KEY}
+    param = {'key': API_KEY}
+
+    if creacion:
+        param['address'] = direccion.encode('utf-8')
+    else:
+        param['address'] = direccion
+
+
     req = urllib2.Request(API_URL+urllib.urlencode(param))
     res = urllib2.urlopen(req)
     res_json = res.read()
