@@ -15,9 +15,12 @@ class EventoConcretoHandler(BaseHandler):
         _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=False)
         # Devuelve un evento concreto en version larga, proporcionada su clave en urlsafe
 
-        eventoDic = evento_largo_clave(clave_evento_o_fallo(claveEvento))
+        claveEvento = clave_evento_o_fallo(claveEvento)
+        eventoDic = evento_largo_clave(claveEvento)
 
-        if usuario is not None and usuario.tipo != 3 and not eventoDic['validado']:
+        # Si el evento no esta validado lanzar excepcion, al no ser que el usuario este logueado y
+        # sea o el creador o periodista
+        if (not eventoDic['validado'] and usuario is None) or (not eventoDic['validado'] and usuario.tipo != 3 and usuario.key != claveEvento.parent()):
             # El usuario no tiene permisos para ver un evento sin validar
             raise AgendamlgException.sin_permisos(usuario)
 
