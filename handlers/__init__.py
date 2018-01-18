@@ -13,3 +13,4 @@ from validar import ValidacionHandler
 from evento_concreto import EventoConcretoHandler
 from eventos_usuario import EventosUsuario
 from mis_eventos import MisEventos
+from fotos_evento import FotosEventoHandler
