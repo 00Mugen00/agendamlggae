@@ -15,12 +15,13 @@ import util.json
 from salida_eventos_json import eventos_json
 from geocode import encontrar_coordenadas
 
+
 class EventoHandler(BaseHandler):
 
     # Creacion de un evento, es una ruta que necesita autenticacion
     # Se recibe una lista de categorias, que son sus claves en version urlsafe
     def post(self):
-        #Si el usuario no est autenticado se lanza excepcion
+        # Si el usuario no est autenticado se lanza excepcion
         _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=True)
 
         evento_from_json = self.json_body()
@@ -44,10 +45,14 @@ class EventoHandler(BaseHandler):
         else:
             evento.coordenadas = None
 
-       # Rellenar las categorias del evento (lista de claves de categorias)
-        evento.categorias = [ndb.Key(urlsafe=claveURLSafe) for claveURLSafe in evento_from_json.get('categoriaList', [])]
+        # Rellenar las categorias del evento (lista de claves de categorias)
+        # Ojo! las categorias tienen la siguiente forma
+        # [{"id": X},{"id": X}....]
+        evento.categorias = [ndb.Key(urlsafe=claveURLSafe['id']) for claveURLSafe in
+                             evento_from_json.get('categoriaList', [])]
         # Gestionar datos de flickr
-        modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None), evento_from_json.get('flickrAlbumID', None))
+        modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None),
+                             evento_from_json.get('flickrAlbumID', None))
 
         # Fijar las coordenadas del evento
         coordenadas_evento = encontrar_coordenadas(evento.direccion)
@@ -68,7 +73,6 @@ class EventoHandler(BaseHandler):
 
         # Devolver evento recien creado completo
         self.response.write(util.json.to_json(eventoDic))
-
 
     # Obtener todos los eventos existentes en el sistema, es el equivalente a filtrar
     # con un filtro vacio, sirve estando logueado o no
@@ -97,7 +101,7 @@ def modificarDatosFlickr(evento, userId=None, albumId=None):
 
             expresion = re.compile('\d+@N\d{2}')
 
-            if userId and not(expresion.match(userId)):
+            if userId and not (expresion.match(userId)):
                 # Se obtiene empleando la API de flickr el user ID
                 url_peticion = "http://www.flickr.com/photos/{}/".format(userId)
                 print 'He hecho peticion!!!'
@@ -109,7 +113,3 @@ def modificarDatosFlickr(evento, userId=None, albumId=None):
             if not evento.flickrUserId:
                 # Lanzar excepcion de incidencia con flickr
                 raise AgendamlgException.flickr_username_invalido(userId)
-
-
-
-
