@@ -16,7 +16,6 @@ class FiltradoHandler(BaseHandler):
         filtrado = self.request.GET
         categorias = self.request.get_all('categorias')
 
-
         # Si el usuario no esta autenticado no se lanza excepcion, de ahi el False
         # La barra baja indica que no se interesa asignar esa parte de la tupla
         _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=False)
@@ -29,12 +28,11 @@ class FiltradoHandler(BaseHandler):
             # El metodo de la fachada espera recibir una lista de claves de categoria, por la URL
             # se va a pasar el id de categoria
             # MUY importante la conversion del string de la URL a entero!
-            filtrado['categorias'] = [ndb.Key('Categoria', int(categoria_id), parent=agenda_key()) for categoria_id in categorias]
+            filtrado['categorias'] = [ndb.Key('Categoria', int(categoria_id), parent=agenda_key()) for categoria_id in
+                                      categorias]
 
         # Se procede a obtener la lista de resultados
 
         eventos = buscar_evento_categorias(usuario, **filtrado)
 
         self.response.write(eventos_json(eventos))
-
-

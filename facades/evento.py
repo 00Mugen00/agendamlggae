@@ -23,12 +23,12 @@ def enviar_correo_interesados(evento):
     categorias = Categoria.query(Categoria.nombre.IN(evento.categorias)).fetch()
     send_mail(usuario.buscar_usuarios_preferencias(categorias),
               u'Hay un evento que te puede gustar',
-              evento.nombre+u' es un evento de tu preferencia')
+              evento.nombre + u' es un evento de tu preferencia')
 
 
-def enviar_correo_creador(evento,creador):
+def enviar_correo_creador(evento, creador):
     usuarios = [creador]
-    send_mail(usuarios,u'Tu evento ha sido publicado',u'El evento '+evento.nombre+u' ha sido publicado')
+    send_mail(usuarios, u'Tu evento ha sido publicado', u'El evento ' + evento.nombre + u' ha sido publicado')
 
 
 def crear_evento_tipo_usuario(usuario, evento):
@@ -40,17 +40,16 @@ def crear_evento_tipo_usuario(usuario, evento):
     if evento.tipo < 1 or evento.tipo > 3:
         raise AgendamlgException.tipo_invalido(evento.tipo)
 
-
     if usuario.tipo == 1:
         evento.validado = False
-    elif usuario.tipo > 1 and usuario.tipo <4:
+    elif usuario.tipo > 1 and usuario.tipo < 4:
         evento.validado = True
     else:
         raise NotAuthenticatedException.no_autenticado()
 
     evento.put()
 
-    #enviar_correo_interesados(evento)
+    # enviar_correo_interesados(evento)
 
 
 def buscar_eventos_usuario(usuario, todos):
@@ -126,7 +125,7 @@ def buscar_evento_categorias(usuario, **filtrado):
         consulta = consulta.filter(Evento.validado == True)
 
     # Si se da una lista de categorias y esta no es vacia considera tambien en la consulta
-    if len(filtrado.get('categorias',[])) > 0:
+    if len(filtrado.get('categorias', [])) > 0:
         consulta = consulta.filter(Evento.categorias.IN(filtrado['categorias']))
 
     # El orden por distancia o el filtrado por titulo debe hacerse fuera de DataStore por la forma en que este funciona
@@ -181,6 +180,7 @@ def validar_evento(clave_evento):
         # Si hay una excepcion, se lanza que el evento no se ha encontrado en la agenda o similar
         raise AgendamlgNotFoundException.evento_no_existe(clave_evento)
 
+
 def distancia(origin, destination):
     # type: (object, object) -> object
     """
@@ -226,6 +226,7 @@ def obtener_foto_url(evento):
 
     return retorno
 
+
 # Dado un texto devuelve la version corta de este
 
 
@@ -233,23 +234,24 @@ def obtener_foto_url(evento):
 def evento_corto_clave(clave):
     return evento_corto(clave.get())
 
+
 # Dada una clave de evento devuelve un diccionario con una version extendida del evento
-def evento_largo_clave(clave, usuario_sesion = None):
+def evento_largo_clave(clave, usuario_sesion=None):
     return evento_largo(clave.get(), usuario_sesion)
 
-# Dada un evento devuelve un diccionario con una version resumida del evento
-def evento_corto(evento, adjuntar_datos_flickr = False):
 
+# Dada un evento devuelve un diccionario con una version resumida del evento
+def evento_corto(evento, adjuntar_datos_flickr=False):
     # Lanzar excepcion si no existe el evento
     if evento is None:
         raise AgendamlgNotFoundException.evento_no_existe(evento)
 
-    retorno = {'descripcion': truncar.trunc(evento.descripcion,max_pos=MAX_CARACTERES_DESCRIPCION),
-     'direccion': evento.direccion,
-     'fecha': util.to_utc(evento.fecha).isoformat(),
-     'nombre': evento.nombre,
-     'precio': evento.precio,
-     'id': evento.key.urlsafe()}
+    retorno = {'descripcion': truncar.trunc(evento.descripcion, max_pos=MAX_CARACTERES_DESCRIPCION),
+               'direccion': evento.direccion,
+               'fecha': util.to_utc(evento.fecha).isoformat(),
+               'nombre': evento.nombre,
+               'precio': evento.precio,
+               'id': evento.key.urlsafe()}
 
     if evento.coordenadas:
         retorno['latitud'] = evento.coordenadas.lat
@@ -265,6 +267,7 @@ def evento_corto(evento, adjuntar_datos_flickr = False):
 
     return retorno
 
+
 # Dada un evento devuelve un diccionario con una version extendida del evento
 def evento_largo(evento, usuario_sesion=None):
     retorno = evento_corto(evento, True)
@@ -276,7 +279,7 @@ def evento_largo(evento, usuario_sesion=None):
 
     retorno['validado'] = evento.validado
 
-   # Devolver tambien el tipo del evento!
+    # Devolver tambien el tipo del evento!
     retorno['tipo'] = evento.tipo
 
     # Fijar los me gusta que tiene el evento
@@ -289,6 +292,7 @@ def evento_largo(evento, usuario_sesion=None):
 
     return retorno
 
+
 # Dada una clave de un evento como urlsafe devuelve el evento o una excepcion
 
 def clave_evento_o_fallo(eid):
@@ -299,4 +303,3 @@ def clave_evento_o_fallo(eid):
         return k
     except Exception:
         raise AgendamlgNotFoundException.evento_no_existe(eid)
-

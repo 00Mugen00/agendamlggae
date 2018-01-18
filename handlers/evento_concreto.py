@@ -20,7 +20,8 @@ class EventoConcretoHandler(BaseHandler):
 
         # Si el evento no esta validado lanzar excepcion, al no ser que el usuario este logueado y
         # sea o el creador o periodista
-        if (not eventoDic['validado'] and usuario is None) or (not eventoDic['validado'] and usuario.tipo != 3 and usuario.key != claveEvento.parent()):
+        if (not eventoDic['validado'] and usuario is None) or (
+                not eventoDic['validado'] and usuario.tipo != 3 and usuario.key != claveEvento.parent()):
             # El usuario no tiene permisos para ver un evento sin validar
             raise AgendamlgException.sin_permisos(usuario)
 
@@ -52,7 +53,7 @@ class EventoConcretoHandler(BaseHandler):
             # Excepcion por no tener permiso
             raise AgendamlgException.sin_permisos(usuario)
 
-        #Proceder al borrado del evento
+        # Proceder al borrado del evento
         eventoDic.key.delete()
 
         # Si se elimina con exito se devuelve este json

@@ -50,7 +50,7 @@ def lista_eventos_diccionario(eventos=None, version_corta=True):
             evento.pop('flickrAlbumID', None)
             evento.pop('flickrUserID', None)
 
-    [ foto_asincrono(event) for event in eventos_dic ]
+    [foto_asincrono(event) for event in eventos_dic]
     util.wait_tasks()
 
     return eventos_dic
