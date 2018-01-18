@@ -52,7 +52,8 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/usuario/<idGoogle:[0-9]+/?>', handlers.EventosUsuario),
             # Obtencion de las fotos de un evento
             webapp2.Route(r'/fotos/<claveEvento:[a-zA-Z\-0-9]+/?>', handlers.FotosEventoHandler),
-
+            # Geolocalizacion
+            webapp2.Route(r'/direccion/<direccion:.+/?>', handlers.CoordenadasLatLong)
         ]),
         webapp2.Route(r'/comentario/<eid:[a-zA-Z\-0-9]+/?>', handlers.ComentarioHandler),
         webapp2.Route(r'/megusta/<eid:[a-zA-Z\-0-9]+/?>', handlers.MeGustaHandler),

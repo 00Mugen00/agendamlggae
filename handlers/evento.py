@@ -113,3 +113,20 @@ def modificarDatosFlickr(evento, userId=None, albumId=None):
             if not evento.flickrUserId:
                 # Lanzar excepcion de incidencia con flickr
                 raise AgendamlgException.flickr_username_invalido(userId)
+
+
+class CoordenadasLatLong(BaseHandler):
+    def get(self, direccion):
+        _, usuario = get_user_from_token(self.request.headers.get('bearer'))
+        coordenadas = encontrar_coordenadas(direccion)
+        encontrado = True
+
+        if coordenadas is None:
+            encontrado = False
+
+        self.response.write(util.json.to_json({
+            'encontrado': encontrado,
+            'latitud': coordenadas.lat if coordenadas else None,
+            'longitud': coordenadas.lon if coordenadas else None
+        }))
+
