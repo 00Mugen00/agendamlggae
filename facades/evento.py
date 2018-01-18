@@ -13,6 +13,7 @@ from facades import usuario
 from flickr import photosets
 import truncar
 import util
+from megusta import buscar_numero_me_gusta_evento
 
 # Maximo numero de caracteres que pueden aparecer en descripcion del evento
 MAX_CARACTERES_DESCRIPCION = 150
@@ -277,6 +278,9 @@ def evento_largo(evento):
 
    # Devolver tambien el tipo del evento!
     retorno['tipo'] = evento.tipo
+
+    # Fijar los me gusta que tiene el evento
+    retorno['meGusta'] = buscar_numero_me_gusta_evento(evento)
 
     return retorno
 
