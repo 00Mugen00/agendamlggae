@@ -50,6 +50,8 @@ app = webapp2.WSGIApplication([
             webapp2.Route(r'/<claveEvento:[a-zA-Z\-0-9]+/?>', handlers.EventoConcretoHandler),
             # Eventos creados por un usuario, no el usuario logueado
             webapp2.Route(r'/usuario/<idGoogle:[0-9]+/?>', handlers.EventosUsuario),
+            # Geolocalizacion
+            webapp2.Route(r'/direccion/<direccion:.+/?>', handlers.CoordenadasLatLong),
 
         ]),
         webapp2.Route(r'/comentario/<eid:[a-zA-Z\-0-9]+/?>', handlers.ComentarioHandler),
