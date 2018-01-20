@@ -46,8 +46,8 @@ def eliminar_comentario(usuario, evento):
     if not comentario:
         AgendamlgNotFoundException.comentario_no_existe(evento.urlsafe())
     comentario = comentario[0]
-    if usuario.tipo == 3 or usuario.key == comentario.get().creador:
-        comentario.delete()
+    if usuario.tipo == 3 or usuario.key == comentario.creador:
+        comentario.key.delete()
     else:
         raise AgendamlgException.sin_permisos(usuario.idGoogle)
 

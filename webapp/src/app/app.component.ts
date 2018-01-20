@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
     logout(event: Event) {
         event.preventDefault();
         window.localStorage.removeItem("token");
-        window.location.replace("/agendamlgr");
+        window.location.replace("/");
     }
 
     buscar() {

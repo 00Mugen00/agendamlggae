@@ -20,10 +20,13 @@ import { ListadoEventosComponent } from "./components/listadoEventos/listadoEven
 import { MostrarErrorComponent } from "./components/mostrarError/mostrarError.component";
 import { BusquedaNormalComponent } from "./components/busquedaNormal/busquedaNormal.component";
 import { MapaDesdeDireccionComponent } from "./components/mapaDesdeDireccion/mapaDesdeDireccion.component";
+import { ComentarioComponent } from "./components/comentario/comentario.component";
 //Service imports
 import { CategoriaService } from './services/categoria.service';
 import { UsuarioService } from './services/usuario.service';
 import { EventoService } from './services/evento.service';
+import { ComentarioService } from './services/comentario.service';
+import { MeGustaService } from './services/megusta.service';
 //Pipe imports
 import { ParseDateStringPipe } from "./pipes/parseDateString.pipe";
 import { MarkdownPipe } from "./pipes/markdown.pipe";
@@ -71,12 +74,15 @@ const appRoutes: Routes = [
         BusquedaNormalComponent,
         ParseDateStringPipe,
         MarkdownPipe,
-        MapaDesdeDireccionComponent
+        MapaDesdeDireccionComponent,
+        ComentarioComponent
     ],
     providers: [
         CategoriaService,
         UsuarioService,
-        EventoService
+        EventoService,
+        MeGustaService,
+        ComentarioService
     ],
     bootstrap: [ AppComponent ]
 })

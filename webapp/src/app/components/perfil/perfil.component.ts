@@ -52,8 +52,10 @@ export class PerfilComponent implements OnInit {
         let userId = this.route.snapshot.params['id'];
         if (userId) {
             this.miPerfil = false;
-            this.usuarioService.obtenerUsuarioDeLaSesion().subscribe(usuario => {this.usuarioSesion = usuario;},
-                err => {this.errorResponse = err});
+            if(localStorage.getItem('token')) {
+                this.usuarioService.obtenerUsuarioDeLaSesion().subscribe(usuario => this.usuarioSesion = usuario,
+                    err => this.errorResponse = err);
+            }
             this.usuarioService.buscarUsuario(userId).subscribe(usuario => this.usuario = usuario, (errorResponse) => {
                 this.errorResponse = errorResponse;
             });
