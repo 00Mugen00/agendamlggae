@@ -90,7 +90,7 @@ def buscar_evento_categorias(usuario, **filtrado):
 
     {
     categorias: list Categoria, # Lista de claves de Categoria para el filtrado, claves de Categoria!
-    filtroCercania: Boolean     # Indicar si se esta filtrando (ordenando) por cercania respecto a una posicion y radio dados
+    ordenarPorDistancia: Boolean     # Indicar si se esta filtrando (ordenando) por cercania respecto a una posicion y radio dados
     coordenadas: ndb.GeoPt      # Objeto GeoPt de ndb que almacena las coordenadas, posicion dada por el usuario (procedente GeoLocalizacion normalmente)
     radio: float                # Radio alrededor del cual filtrar los eventos
     textoTitulo: string         # Filtrar eventos ademas en base al titulo
@@ -100,6 +100,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     :param filtrado: Descrito anteriormente
     :return: list Evento
     """
+
 
     fecha_actual = dt.now()
 
@@ -113,12 +114,19 @@ def buscar_evento_categorias(usuario, **filtrado):
     consulta = consulta.filter(ndb.OR(Evento.fecha > fecha_actual, Evento.tipo == 2, Evento.tipo == 3))
 
     # Si no se pide filtrado por distancia, se hace ordenacion por fecha descendente
-    if not filtrado.get('filtroCercania'):
+    if not filtrado.get('ordenarPorDistancia','') == 'true':
         consulta = consulta.order(Evento.fecha)
 
     else:
         # De lo contrario no se traen de la base de datos eventos que no tengan coordenadas
-        consulta = consulta.filter(Evento.coordenadas != None)
+        # consulta = consulta.filter(Evento.coordenadas != None)
+        # Esto no se puede hacer, porque en una query solo se permite un unico filter de no
+        # gualdad, que no sea ==
+        # Ademas en el objeto filtrado hay que establecer la clave "coordenadas" que es un GeoPt
+        # a partir de la latitud y longitud proporcionadas
+        filtrado['coordenadas'] = ndb.GeoPt(filtrado['latitud']+', '+filtrado['longitud'])
+        # Por otro lado se convierte el radio a float
+        filtrado['radio'] = float(filtrado['radio'])
 
     # Si el usuario no es periodista o no ha iniciado sesion se obtienen solo los eventos validados
     if not usuario or usuario.tipo != 3:
@@ -138,11 +146,17 @@ def buscar_evento_categorias(usuario, **filtrado):
     resultados = consulta.fetch()
 
     # Se dispone de filtro de cercania, en consecuencia los eventos se ordenan por distancia a la proporcionada
-    if filtrado.get('filtroCercania', False):
+    if filtrado.get('ordenarPorDistancia', '') == 'true':
+
+        # Dado que anteriormente el query de no igualdad no se ha podido hacer porque solo se puede
+        # tener uno en una query, se eliminan a mano los eventos que no tienen coordenadas, es decir GeoPt
+        resultados = [resultadogeo for resultadogeo in resultados if resultadogeo.coordenadas is not None]
+
         # Preparar un iterador con pares (distancia, evento). Donde distancia es la distancia del evento a
         # la posición proporcionada
         distancias = ((distancia((ev.coordenadas.lat, ev.coordenadas.lon),
                                  (filtrado['coordenadas'].lat, filtrado['coordenadas'].lon)), ev) for ev in resultados)
+
 
         # El siguiente iterador elimina los eventos que esten a una distancia mayor de la proporcionada
         # La distancia se pone negativa para que funcione la ordenacion descendente (a igual distancia,
@@ -150,7 +164,7 @@ def buscar_evento_categorias(usuario, **filtrado):
         lejanos_eliminados = ((-dist, ev) for (dist, ev) in distancias if dist <= filtrado['radio'])
 
         # Se ordenan los pares de esa lista de acuerdo a una funcion de ordenacion
-        ordenacion = sorted(lejanos_eliminados, key=itemgetter(1, 2), reverse=True)
+        ordenacion = sorted(lejanos_eliminados, key=itemgetter(0, 1), reverse=True)
 
         # Se obtiene una lista de eventos
         resultados = [ev for (dist, ev) in ordenacion]
