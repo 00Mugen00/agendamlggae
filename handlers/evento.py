@@ -6,7 +6,7 @@ from models import Evento
 from tokens import get_user_from_token
 from util import parse_date
 from google.appengine.ext import ndb
-from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, obtener_foto_url
+from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, obtener_foto_url, clave_evento_o_fallo
 # Expresiones regulares
 import re
 import flickr
@@ -87,6 +87,62 @@ class EventoHandler(BaseHandler):
         :return: Evento modificado como json
         """
 
+        # Esta ruta requiere de autenticacion
+        _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=True)
+
+        # Evento recibido por json:
+        evento_from_json = self.json_body()
+
+        # Se obtiene el evento
+        evento = clave_evento_o_fallo(evento_from_json.get('id', '')).get()
+
+        # En este punto se ha obtenido con exito el evento, comprobar si pertenece al usuario o este es
+        # periodista
+
+        if usuario.tipo != 3 and usuario.key != evento.key.parent():
+            raise AgendamlgException.sin_permisos(usuario)
+
+        # Proceder a la edicion del evento
+
+        # Actualizar categorias (el evento guarda una lista de claves de categoria
+        evento.categorias = [ndb.Key(urlsafe=jsoncat['id']) for jsoncat in evento_from_json.get('categoriaList', [])]
+
+        # Rellenar el evento
+
+        evento.tipo = int(evento_from_json.get('tipo'))
+        evento.nombre = evento_from_json.get('nombre', None)
+        evento.descripcion = evento_from_json.get('descripcion', None)
+        evento.fecha = parse_date(evento_from_json.get('fecha', None)).replace(tzinfo=None)
+        evento.precio = evento_from_json.get('precio', None)
+        evento.direccion = evento_from_json.get('direccion', None)
+        # Si esta validado o no se gestiona en el el metodo de la fachada
+
+        evento.coordenadas = None
+
+        # Gestionar datos de flickr
+        modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None),
+                             evento_from_json.get('flickrAlbumID', None))
+
+        # Fijar las coordenadas del evento
+        coordenadas_evento = encontrar_coordenadas(evento.direccion)
+
+        if coordenadas_evento is not None:
+            evento.coordenadas = coordenadas_evento
+
+        # Se procede a actualizar el evento
+        evento.put()
+
+        # Se devuelve la version larga del evento
+        eventoDic = evento_largo_clave(evento.key, usuario)
+
+        # Ponerle su fotoUrl!
+        foto_url = obtener_foto_url(eventoDic)
+
+        if foto_url is not None:
+            eventoDic['fotoUrl'] = foto_url
+
+        # Devolver evento recien creado completo
+        self.response.write(util.json.to_json(eventoDic))
 
 def modificarDatosFlickr(evento, userId=None, albumId=None):
     """
