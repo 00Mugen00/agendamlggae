@@ -13,6 +13,7 @@ skip_files:
 - ^(.*/)?.*\.bak$
 - ^(.*/)?.*\.DS_Store$
 - ^(.*/)?.*/node_modules/.*$
+- ^(.*/)?.*/src/.*$
 - ^(webapp/node_modules/.*)
 - ^(webapp/src/.*)
 - ^(webapp/config/.*)
@@ -42,6 +43,11 @@ handlers:
   mime_type: text/javascript
   static_files: webapp/web/\1
   upload: webapp/web/(.*\.js)
+
+- url: /(.*\.map)
+  mime_type: application/json
+  static_files: webapp/web/\1
+  upload: webapp/web/(.*\.map)
 
 - url: /(.*\.otf)
   mime_type: font/opentype

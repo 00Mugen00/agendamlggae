@@ -7,6 +7,8 @@ import { UsuarioService } from '../../services/usuario.service';
 import { Evento, eventoVacio } from '../../interfaces/evento';
 import { FotosDeEvento, fotosDeEventoVacio } from '../../interfaces/fotosDeEvento';
 import { Foto } from '../../interfaces/foto';
+import { Comentario } from "../../interfaces/comentario";
+import { ComentarioService } from "../../services/comentario.service";
 
 @Component({
   selector: 'app-verEvento',
@@ -21,6 +23,7 @@ export class VerEventoComponent implements OnInit {
   nombreCreador: string;
   fotosDeEvento: FotosDeEvento;
   fotos: Foto[];
+  private comentarios: Comentario[];
   private validable: boolean = false;
   private editable: boolean = false;
   private borrable: boolean = false;
@@ -28,6 +31,7 @@ export class VerEventoComponent implements OnInit {
   constructor(private categoriaService: CategoriaService,
               private eventoService: EventoService,
               private usuarioService: UsuarioService,
+              private comentarioService: ComentarioService,
               route: ActivatedRoute) {
                 this.id = route.snapshot.params['id'];
                 this.evento = eventoVacio();
@@ -47,6 +51,9 @@ export class VerEventoComponent implements OnInit {
       },(errorResponse) =>{
         this.errorResponse = errorResponse;
       });
+      this.comentarioService.obtenerComentariosDeEvento(this.evento).subscribe(comentarios => {
+        this.comentarios = comentarios;
+      }, error => this.errorResponse = error);
     },(errorResponse) =>{
       this.errorResponse = errorResponse;
     });
@@ -71,6 +78,12 @@ export class VerEventoComponent implements OnInit {
         null,
         error => this.errorResponse = error
     );
+  }
+
+  eliminarComentario(comentario: Comentario) {
+    this.comentarioService.quitarComentario(this.evento).subscribe(() => {
+      this.comentarios = this.comentarios.filter(c => c.creador.id !== comentario.creador.id);
+    }, error => this.errorResponse = error);
   }
 
 }

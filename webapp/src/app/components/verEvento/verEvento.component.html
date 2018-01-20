@@ -8,7 +8,7 @@
 </p>
 
 <div class="w-100">
-    <div id="carouselEventPictures" class="carousel slide" data-ride="carousel">
+    <div id="carouselEventPictures" class="carousel slide" data-ride="carousel" *ngIf="fotos && fotos.length > 0">
         <div class="carousel-inner">
             <div [class]="i === 0 ? 'carousel-item active' : 'carousel-item'" *ngFor="let foto of fotos; let i = index">
                 <img class="d-block w-100" [src]="foto.url" [alt]="foto.titulo" />
@@ -22,6 +22,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Siguiente</span>
         </a>
+    </div>
+    <div *ngIf="!fotos" class="lead text-muted text-center">
+        Cargando fotos...
     </div>
 </div>
 
@@ -38,6 +41,17 @@
     </agm-map>
     {{ evento.direccion }}
 </p>
+
+<h4>Comentarios</h4>
+<div class="comentarios" *ngIf="comentarios && comentarios.length > 0">
+    <comentario *ngFor="let comentario of comentarios" [comentario]="comentario" [delete]="eliminarComentario"></comentario>
+</div>
+<div class="comentarios" *ngIf="comentarios && comentarios.length === 0">
+    <p class="lead text-muted text-center">No hay comentarios para este evento</p>
+</div>
+<div class="comentarios" *ngIf="!comentarios">
+    <p class="lead text-muted text-center">Cargando comentarios...</p>
+</div>
 
 <hr />
 <div class="d-flex justify-content-center">
