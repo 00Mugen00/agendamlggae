@@ -30,7 +30,9 @@ export class VerEventoComponent implements OnInit {
   private borrable: boolean = false;
   private hayUsuario: boolean = false;
   private usuarioId: string = null;
+  private usuarioHaComentado: boolean = false;
   private eliminarComentarioBinded = this.eliminarComentario.bind(this);
+  private noSirveDeNadaPeroBueno: any;
 
   constructor(private categoriaService: CategoriaService,
               private eventoService: EventoService,
@@ -62,6 +64,7 @@ export class VerEventoComponent implements OnInit {
       });
       this.comentarioService.obtenerComentariosDeEvento(this.evento).subscribe(comentarios => {
         this.comentarios = comentarios;
+        this.usuarioHaComentado = this.comentarios.filter(c => c.creador.id === this.usuarioId).length > 0;
       }, error => this.errorResponse = error);
     },(errorResponse) =>{
       this.errorResponse = errorResponse;
@@ -114,7 +117,15 @@ export class VerEventoComponent implements OnInit {
   eliminarComentario(comentario: Comentario) {
     this.comentarioService.quitarComentario(this.evento).subscribe(() => {
       this.comentarios = this.comentarios.filter(c => c.creador.id !== comentario.creador.id);
+      this.usuarioHaComentado = false;
     }, error => this.errorResponse = error);
+  }
+
+  comentar(comentario: Comentario) {
+    this.comentarioService.comentar(this.evento, comentario).subscribe((comentario) => {
+      this.comentarios.push(comentario[0]);
+      this.usuarioHaComentado = true;
+    }, error => this.errorResponse = error)
   }
 
 }

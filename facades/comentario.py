@@ -15,7 +15,7 @@ def crear_comentario(usuario, evento, comentario):
     :param comentario: comentario que se está creando o comentario que se está modificando
     :return: el Comentario nuevo
     """
-    if u'texto' not in comentario:
+    if u'texto' not in comentario or not isinstance(comentario[u'texto'], (str, unicode)) or not comentario[u'texto']:
         raise AgendamlgException.comentario_campos_invalidos()
 
     otro_comentario = Comentario.query(Comentario.creador == usuario.key, ancestor=evento).fetch()

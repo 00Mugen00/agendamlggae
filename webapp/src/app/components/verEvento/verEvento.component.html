@@ -57,6 +57,14 @@
 <div class="comentarios" *ngIf="!comentarios">
     <p class="lead text-muted text-center">Cargando comentarios...</p>
 </div>
+<div class="nuevo-comentario" *ngIf="hayUsuario && !usuarioHaComentado">
+    <div class="form-group">
+        <label for="comentarioTexto" class="font-weight-bold">Añade un comentario al evento</label>
+        <textarea id="comentarioTexto" name="comentarioTexto" #comentarioTexto class="form-control" [(ngModel)]="noSirveDeNadaPeroBueno"></textarea>
+    </div>
+    <button class="btn btn-outline-primary btn-sm" (click)="comentar({ texto: comentarioTexto.value })" [disabled]="!noSirveDeNadaPeroBueno">Comentar</button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
+</div>
 
 <hr />
 <div class="d-flex justify-content-center">
