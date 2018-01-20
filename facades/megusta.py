@@ -13,7 +13,7 @@ def crear_me_gusta(usuario, evento):
         parent=evento,
         creador=usuario.key
     )
-    if 0 < usuario.tipo < 4 and evento.validado:
+    if 0 < usuario.tipo < 4 and evento.get().validado:
         me_gusta.put()
     else:
         raise AgendamlgException.sin_permisos(usuario.idGoogle)
@@ -26,7 +26,7 @@ def eliminar_me_gusta(usuario, evento):
     :return:
     """
     me_gusta = MeGusta.query(MeGusta.creador == usuario.key, ancestor=evento).fetch()
-    if 0 < usuario.tipo < 4 and evento.validado:
+    if 0 < usuario.tipo < 4 and evento.get().validado:
         me_gusta[0].key.delete() if me_gusta else None
     else:
         raise AgendamlgException.sin_permisos(usuario.idGoogle)

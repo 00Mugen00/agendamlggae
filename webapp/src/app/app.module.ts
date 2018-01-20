@@ -26,6 +26,7 @@ import { CategoriaService } from './services/categoria.service';
 import { UsuarioService } from './services/usuario.service';
 import { EventoService } from './services/evento.service';
 import { ComentarioService } from './services/comentario.service';
+import { MeGustaService } from './services/megusta.service';
 //Pipe imports
 import { ParseDateStringPipe } from "./pipes/parseDateString.pipe";
 import { MarkdownPipe } from "./pipes/markdown.pipe";
@@ -80,6 +81,7 @@ const appRoutes: Routes = [
         CategoriaService,
         UsuarioService,
         EventoService,
+        MeGustaService,
         ComentarioService
     ],
     bootstrap: [ AppComponent ]

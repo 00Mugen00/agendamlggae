@@ -31,6 +31,9 @@
 <h4>Fecha</h4>
 <p class="lead">{{ evento.fecha | parseDateString | date:'EEEE d \'de\' MMMM (y), HH:mm':'':'es' }}</p>
 
+<h4>Número de Likes</h4>
+<p class="lead">{{ evento.likes }}</p>
+
 <h4>Descripcion</h4>
 <p [innerHTML]="evento.descripcion | md"></p>
 
@@ -55,6 +58,10 @@
 
 <hr />
 <div class="d-flex justify-content-center">
+    <a href="#" (click)="darMeGusta($event)" class="btn btn-success" *ngIf="hayUsuario && !evento.meGusta">Like</a>
+    <span>&nbsp;</span>
+    <a href="#" (click)="darNoMeGusta($event)" class="btn btn-default" *ngIf="hayUsuario && evento.meGusta">Dislike</a>
+    <span>&nbsp;</span>
     <a href="#" (click)="validar()" class="btn btn-info" *ngIf="validable">Validar</a>
     <span>&nbsp;</span>
     <a routerLink="/editarEvento/{{ evento.id }}" class="btn btn-warning" *ngIf="editable">Editar</a>

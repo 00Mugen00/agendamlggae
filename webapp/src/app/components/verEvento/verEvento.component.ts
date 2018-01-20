@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CategoriaService } from '../../services/categoria.service';
+import { MeGustaService } from '../../services/megusta.service';
 import { EventoService } from '../../services/evento.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Evento, eventoVacio } from '../../interfaces/evento';
@@ -27,11 +28,13 @@ export class VerEventoComponent implements OnInit {
   private validable: boolean = false;
   private editable: boolean = false;
   private borrable: boolean = false;
+  private hayUsuario: boolean = false;
 
   constructor(private categoriaService: CategoriaService,
               private eventoService: EventoService,
               private usuarioService: UsuarioService,
               private comentarioService: ComentarioService,
+              private meGustaService: MeGustaService,
               route: ActivatedRoute) {
                 this.id = route.snapshot.params['id'];
                 this.evento = eventoVacio();
@@ -45,6 +48,7 @@ export class VerEventoComponent implements OnInit {
         this.validable = !this.evento.validado && usuario.tipo == 3;
         this.editable = this.evento.creador === usuario.id || usuario.tipo == 3;
         this.borrable = usuario.tipo === 3;
+        this.hayUsuario = (usuario.tipo>0 && usuario.tipo<4);
       });
       this.usuarioService.buscarUsuario(this.evento.creador).subscribe((resultado2)=>{
           this.nombreCreador = resultado2.nombre;
@@ -78,6 +82,28 @@ export class VerEventoComponent implements OnInit {
         null,
         error => this.errorResponse = error
     );
+  }
+
+  darMeGusta(event:any) {
+    event.preventDefault();
+    this.meGustaService.crearMeGusta(this.id).subscribe(
+        resultado=>{
+          this.evento.likes++;
+          this.evento.meGusta = true;
+        },
+        error => this.errorResponse = error
+    )
+  }
+
+  darNoMeGusta(event:any) {
+    event.preventDefault();
+    this.meGustaService.eliminarMeGusta(this.id).subscribe(
+        resultado=>{
+          this.evento.likes--;
+          this.evento.meGusta = false;
+        },
+        error => this.errorResponse = error
+    )
   }
 
   eliminarComentario(comentario: Comentario) {
