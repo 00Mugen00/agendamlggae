@@ -16,6 +16,8 @@ export interface Evento {
   categoriaList: Categoria[];
   flickrUserID: string;
   flickrAlbumID: string;
+  meGusta: boolean;
+  likes: number;
 }
 
 export interface Coordenadas {
@@ -40,6 +42,8 @@ export function eventoVacio(): Evento {
       creador: undefined,
       categoriaList: [],
       flickrUserID: undefined,
-      flickrAlbumID: undefined
+      flickrAlbumID: undefined,
+      meGusta: undefined,
+      likes: undefined
   };
 }

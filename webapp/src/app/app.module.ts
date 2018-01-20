@@ -24,6 +24,7 @@ import { MapaDesdeDireccionComponent } from "./components/mapaDesdeDireccion/map
 import { CategoriaService } from './services/categoria.service';
 import { UsuarioService } from './services/usuario.service';
 import { EventoService } from './services/evento.service';
+import { MeGustaService } from './services/megusta.service';
 //Pipe imports
 import { ParseDateStringPipe } from "./pipes/parseDateString.pipe";
 import { MarkdownPipe } from "./pipes/markdown.pipe";
@@ -76,7 +77,8 @@ const appRoutes: Routes = [
     providers: [
         CategoriaService,
         UsuarioService,
-        EventoService
+        EventoService,
+        MeGustaService
     ],
     bootstrap: [ AppComponent ]
 })
