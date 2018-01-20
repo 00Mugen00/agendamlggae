@@ -44,12 +44,14 @@ export class VerEventoComponent implements OnInit {
   ngOnInit(){
     this.eventoService.buscarEvento(this.id).subscribe((resultado)=>{
       this.evento = resultado;
-      this.usuarioService.obtenerUsuarioDeLaSesion().subscribe(usuario => {
-        this.validable = !this.evento.validado && usuario.tipo == 3;
-        this.editable = this.evento.creador === usuario.id || usuario.tipo == 3;
-        this.borrable = usuario.tipo === 3;
-        this.hayUsuario = (usuario.tipo>0 && usuario.tipo<4);
-      });
+      if(localStorage.getItem('token')) {
+        this.usuarioService.obtenerUsuarioDeLaSesion().subscribe(usuario => {
+          this.validable = !this.evento.validado && usuario.tipo == 3;
+          this.editable = this.evento.creador === usuario.id || usuario.tipo == 3;
+          this.borrable = usuario.tipo === 3;
+          this.hayUsuario = (usuario.tipo > 0 && usuario.tipo < 4);
+        });
+      }
       this.usuarioService.buscarUsuario(this.evento.creador).subscribe((resultado2)=>{
           this.nombreCreador = resultado2.nombre;
       },(errorResponse) =>{
@@ -87,7 +89,7 @@ export class VerEventoComponent implements OnInit {
   darMeGusta(event:any) {
     event.preventDefault();
     this.meGustaService.crearMeGusta(this.id).subscribe(
-        resultado=>{
+        () => {
           this.evento.likes++;
           this.evento.meGusta = true;
         },
@@ -98,7 +100,7 @@ export class VerEventoComponent implements OnInit {
   darNoMeGusta(event:any) {
     event.preventDefault();
     this.meGustaService.eliminarMeGusta(this.id).subscribe(
-        resultado=>{
+        () => {
           this.evento.likes--;
           this.evento.meGusta = false;
         },
