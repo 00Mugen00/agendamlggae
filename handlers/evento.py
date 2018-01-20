@@ -80,6 +80,13 @@ class EventoHandler(BaseHandler):
         # Devolver respuesta
         self.response.write(eventos_json(eventos, True))
 
+    def put(self):
+        """
+        Dado un evento como json, procede a actualizarlo
+
+        :return: Evento modificado como json
+        """
+
 
 def modificarDatosFlickr(evento, userId=None, albumId=None):
     """
