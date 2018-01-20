@@ -5,21 +5,19 @@ import urllib2
 import util.json
 from tokens import google_api_key
 from google.appengine.ext.ndb import GeoPt
-from urllib import quote_plus
 
 API_URL = u'https://maps.googleapis.com/maps/api/geocode/json?'
 API_KEY = google_api_key
 
 
-def encontrar_coordenadas(direccion, creacion = False):
-
+def encontrar_coordenadas(direccion):
+    # type: (str|unicode) -> GeoPt|None
     param = {'key': API_KEY}
 
-    if creacion:
+    if isinstance(direccion, unicode):
         param['address'] = direccion.encode('utf-8')
     else:
         param['address'] = direccion
-
 
     req = urllib2.Request(API_URL+urllib.urlencode(param))
     res = urllib2.urlopen(req)
@@ -30,6 +28,6 @@ def encontrar_coordenadas(direccion, creacion = False):
         location = parsed['results'][0]['geometry']['location']
         lat = location['lat']
         lng = location['lng']
-        return GeoPt(lat,lng)
+        return GeoPt(lat, lng)
     else:
         return None

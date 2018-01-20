@@ -51,7 +51,7 @@ class EventoHandler(BaseHandler):
                              evento_from_json.get('flickrAlbumID', None))
 
         # Fijar las coordenadas del evento
-        coordenadas_evento = encontrar_coordenadas(evento.direccion, True)
+        coordenadas_evento = encontrar_coordenadas(evento.direccion)
 
         if coordenadas_evento is not None:
             evento.coordenadas = coordenadas_evento

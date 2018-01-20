@@ -16,7 +16,6 @@ skip_files:
 - ^(webapp/node_modules/.*)
 - ^(webapp/src/.*)
 - ^(webapp/config/.*)
-- ^(webapp/*.js.*)
 
 handlers:
 - url: /agendamlg-api/.*
