@@ -93,7 +93,7 @@ export class VerEventoComponent implements OnInit {
   }
 
   darMeGusta(event:any) {
-    event.preventDefault();
+    if(event) event.preventDefault();
     this.meGustaService.crearMeGusta(this.id).subscribe(
         () => {
           this.evento.likes++;
@@ -104,7 +104,7 @@ export class VerEventoComponent implements OnInit {
   }
 
   darNoMeGusta(event:any) {
-    event.preventDefault();
+    if(event) event.preventDefault();
     this.meGustaService.eliminarMeGusta(this.id).subscribe(
         () => {
           this.evento.likes--;
@@ -112,6 +112,13 @@ export class VerEventoComponent implements OnInit {
         },
         error => this.errorResponse = error
     )
+  }
+
+  toggleLike() {
+    if(this.hayUsuario) {
+      if(this.evento.meGusta) this.darNoMeGusta(null);
+      else this.darMeGusta(null);
+    }
   }
 
   eliminarComentario(comentario: Comentario) {

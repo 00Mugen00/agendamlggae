@@ -5,3 +5,38 @@
 .nuevo-comentario {
     margin-top: 1.68em;
 }
+
+.like:hover, .like.active {
+    color: #DE2960;
+}
+
+.heart {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    background: url('https://abs.twimg.com/a/1516245748/img/animations/web_heart_animation_edge.png') no-repeat left;
+    background-size: 2900%;
+}
+
+.like:hover .heart, .heart:hover {
+    background-position: 3.571428571428571%
+}
+
+.like.active .hear, .heart.active {
+    animation: heart-burst .8s steps(28) 1;
+    background-position: right
+}
+
+.like.active:hover .heart, .heart.active:hover {
+    background-position: right
+}
+
+.heart.disabled, .heart.disabled:hover, .like:hover .heart.disabled {
+    cursor: default;
+    background-position: left;
+}
+
+@keyframes heart-burst {
+    from {background-position: left }
+    to { background-position: right }
+}
