@@ -10,7 +10,7 @@ def get_photos(user_id, photoset_id):
         u'flickr.photosets.getPhotos',
         { u'user_id': user_id, u'photoset_id': photoset_id }
     )
-    return flickr.api.PhotoSetPhotos(res[u'photoset']) if res[u'photoset'] else None
+    return flickr.api.PhotoSetPhotos(res[u'photoset']) if u'photoset' in res else None
 
 
 def get_info(user_id, photoset_id):
@@ -20,4 +20,4 @@ def get_info(user_id, photoset_id):
         u'flickr.photosets.getInfo',
         { u'user_id': user_id, u'photoset_id': photoset_id }
     )
-    return flickr.api.PhotoSetInfo(res[u'photoset']) if res[u'photoset'] else None
+    return flickr.api.PhotoSetInfo(res[u'photoset']) if u'photoset' in res else None
