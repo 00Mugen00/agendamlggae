@@ -65,6 +65,9 @@
     <button class="btn btn-outline-primary btn-sm" (click)="comentar({ texto: comentarioTexto.value })" [disabled]="!noSirveDeNadaPeroBueno">Comentar</button>
     <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = noSirveDeNadaPeroBueno = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
 </div>
+<div class="nuevo-comentario text-muted text-center" *ngIf="!hayUsuario">
+    Para poder comentar, has de iniciar sesión
+</div>
 
 <hr />
 <div class="d-flex justify-content-center">
