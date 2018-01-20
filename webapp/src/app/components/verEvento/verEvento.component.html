@@ -47,7 +47,9 @@
 
 <h4>Comentarios</h4>
 <div class="comentarios" *ngIf="comentarios && comentarios.length > 0">
-    <comentario *ngFor="let comentario of comentarios" [comentario]="comentario" [delete]="eliminarComentario"></comentario>
+    <comentario *ngFor="let comentario of comentarios"
+                [comentario]="comentario"
+                [delete]="usuarioId === comentario.creador.id ? eliminarComentarioBinded : null"></comentario>
 </div>
 <div class="comentarios" *ngIf="comentarios && comentarios.length === 0">
     <p class="lead text-muted text-center">No hay comentarios para este evento</p>

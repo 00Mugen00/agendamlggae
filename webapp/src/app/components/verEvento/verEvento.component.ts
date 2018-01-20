@@ -29,6 +29,8 @@ export class VerEventoComponent implements OnInit {
   private editable: boolean = false;
   private borrable: boolean = false;
   private hayUsuario: boolean = false;
+  private usuarioId: string = null;
+  private eliminarComentarioBinded = this.eliminarComentario.bind(this);
 
   constructor(private categoriaService: CategoriaService,
               private eventoService: EventoService,
@@ -50,6 +52,7 @@ export class VerEventoComponent implements OnInit {
           this.editable = this.evento.creador === usuario.id || usuario.tipo == 3;
           this.borrable = usuario.tipo === 3;
           this.hayUsuario = (usuario.tipo > 0 && usuario.tipo < 4);
+          this.usuarioId = usuario.id;
         });
       }
       this.usuarioService.buscarUsuario(this.evento.creador).subscribe((resultado2)=>{

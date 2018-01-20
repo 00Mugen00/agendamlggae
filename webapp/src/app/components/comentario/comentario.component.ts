@@ -17,4 +17,9 @@ export class ComentarioComponent {
         };
     }
 
+    eliminarPeroBienHecho(event: Event) {
+        event.preventDefault();
+        this.delete(this.comentario);
+    }
+
 }

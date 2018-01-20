@@ -35,12 +35,9 @@
         margin-top: 0;
     }
 
-    > div:first-child {
+    > .imagen {
         padding: 0;
         margin-bottom: 10px;
-        -webkit-box-flex: 0;
-        flex: 0 0 8.333333%;
-        max-width: 8.3333333333%;
         float: none;
 
         display: -webkit-flex;
@@ -53,12 +50,9 @@
         }
     }
 
-    > div:nth-child(2) {
+    > .nombre {
         float: none;
         margin-bottom: 10px;
-        -webkit-box-flex: 0;
-        flex: 0 0 90.6666666666%;
-        max-width: 91.666666666%;
 
         display: -webkit-flex;
         display: -ms-flex;
@@ -74,7 +68,7 @@
         }
     }
 
-    > div:nth-child(3) {
+    > .texto {
         float: none;
         -webkit-box-flex: 0;
         flex: 0 0 100%;
@@ -83,6 +77,15 @@
         > .text-right {
             margin-bottom: 20px;
         }
+    }
+
+    //Extra (not from before)
+    > .eliminar {
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 

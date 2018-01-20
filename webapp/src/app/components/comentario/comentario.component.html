@@ -1,13 +1,16 @@
 <!-- https://github.com/melchor629/AplicacionTecnologiasWeb/blob/master/web/web/perfil.xhtml#L335 -->
 <div class="row comentario">
-    <div class="col-3 col-sm-1">
+    <div class="col-3 col-sm-1 imagen">
         <div class="img-circle img-profile" [ngStyle]="leStyles()"></div>
     </div>
-    <div class="col-9 col-sm-11">
+    <div class="col-9 {{delete?'':'col-sm-11'}} nombre">
         <div>
             <h4>{{ comentario.creador.nombre }}</h4>
             <a routerLink="/perfil/{{ comentario.creador.id }}"><small>Ver perfil</small></a>
         </div>
     </div>
-    <div class="col-12 lead" [innerHTML]="comentario.texto | md"></div>
+    <div class="col-12 col-sm-2 eliminar" *ngIf="delete">
+        <a href="#" (click)="eliminarPeroBienHecho($event)" class="btn btn-sm btn-outline-danger">Eliminar</a>
+    </div>
+    <div class="col-12 lead texto" [innerHTML]="comentario.texto | md"></div>
 </div>
