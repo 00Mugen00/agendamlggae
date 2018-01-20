@@ -21,7 +21,7 @@ class FiltradoHandler(BaseHandler):
         # La barra baja indica que no se interesa asignar esa parte de la tupla
         _, usuario = get_user_from_token(self.request.headers.get('bearer'), raise_for_unauthenticated=False)
 
-        if usuario and bool(self.request.get('mostrarDeMiPreferencia')):
+        if usuario and self.request.get('mostrarDeMiPreferencia', '') == 'true':
             # La lista de categorias se rellena en base a las preferencias del usuario
             filtrado['categorias'] = usuario.preferencias
 
