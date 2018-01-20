@@ -63,7 +63,7 @@
         <textarea id="comentarioTexto" name="comentarioTexto" #comentarioTexto class="form-control" [(ngModel)]="noSirveDeNadaPeroBueno"></textarea>
     </div>
     <button class="btn btn-outline-primary btn-sm" (click)="comentar({ texto: comentarioTexto.value })" [disabled]="!noSirveDeNadaPeroBueno">Comentar</button>
-    <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = noSirveDeNadaPeroBueno = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
 </div>
 
 <hr />
