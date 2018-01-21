@@ -34,6 +34,8 @@ def based_on(decorator, service):
                     # Retreive the original url from memcache or from the upper method
                     come_from = memcache.get('come_from')
                     original_url = come_from if come_from else original_url
+                    if isinstance(original_url, unicode):
+                        original_url = original_url.encode('utf-8')
                     memcache.delete('come_from')
                     # Get user's info
                     http = decorator.http()
@@ -63,7 +65,7 @@ def based_on(decorator, service):
                         self.response.headers['Content-Type'] = 'application/json; charset=utf8'
                         self.response.write(u'{{"token": "{}", "newcomer": {}}}'.format(jwt_token, newcomer))
                 except client.AccessTokenRefreshError:
-                    self.redirect(self.request.path_url + '?' + urlencode({'url', original_url}))
+                    self.redirect(self.request.path_url + '?' + urlencode({'url': original_url}))
             else:
                 # Redirect to Google Authentication page
                 # TODO Make a better way to store the original_url, that is unique for any login
