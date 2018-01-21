@@ -130,7 +130,7 @@ export class VerEventoComponent implements OnInit {
 
   comentar(comentario: Comentario) {
     this.comentarioService.comentar(this.evento, comentario).subscribe((comentario) => {
-      this.comentarios.push(comentario[0]);
+      this.comentarios = comentario.concat(this.comentarios);
       this.usuarioHaComentado = true;
     }, error => this.errorResponse = error)
   }
