@@ -103,8 +103,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     :return: list Evento
     """
 
-
-    fecha_actual = dt.now()
+    fecha_actual = dt.utcnow()
 
     # Se construye una primera consulta, la cual irá refinándose
     # conforme los requisitos de filtrado
@@ -116,7 +115,7 @@ def buscar_evento_categorias(usuario, **filtrado):
     consulta = consulta.filter(ndb.OR(Evento.fecha > fecha_actual, Evento.tipo == 2, Evento.tipo == 3))
 
     # Si no se pide filtrado por distancia, se hace ordenacion por fecha descendente
-    if not filtrado.get('ordenarPorDistancia','') == 'true':
+    if not filtrado.get('ordenarPorDistancia', '') == 'true':
         consulta = consulta.order(Evento.fecha)
 
     else:
@@ -159,7 +158,6 @@ def buscar_evento_categorias(usuario, **filtrado):
         distancias = ((distancia((ev.coordenadas.lat, ev.coordenadas.lon),
                                  (filtrado['coordenadas'].lat, filtrado['coordenadas'].lon)), ev) for ev in resultados)
 
-
         # El siguiente iterador elimina los eventos que esten a una distancia mayor de la proporcionada
         # La distancia se pone negativa para que funcione la ordenacion descendente (a igual distancia,
         # se escoger la fecha mas reciente (mayor)
@@ -183,8 +181,7 @@ def buscar_evento_categorias(usuario, **filtrado):
 def validar_evento(clave_evento):
     """
     Dada una clave de evento como urlsafe, se procede a la validacion de este
-    :param usuario:
-    :param id_evento:
+    :param clave_evento: Instancia de Key para un evento
     :return:
     """
     try:
