@@ -26,7 +26,8 @@ module.exports = webpackMerge(commonConfig, {
         new ExtractTextPlugin('[name].[hash].css'),
         new webpack.DefinePlugin({
             'process.env': {
-                'ENV': JSON.stringify(ENV)
+                'ENV': JSON.stringify(ENV),
+                'BASE_URL': JSON.stringify('https://agendamlggae-amjm.appspot.com')
             }
         }),
         new webpack.LoaderOptionsPlugin({

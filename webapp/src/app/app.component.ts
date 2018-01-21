@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {CategoriaService} from './services/categoria.service';
+import {AbstractService} from "./services/abstract.service";
 
 @Component({
     selector: 'my-app',
@@ -11,6 +12,7 @@ export class AppComponent implements OnInit {
     userLoggedIn: boolean;
     private routerUrl: string;
     private textoBuscar: string = "";
+    private urlInicioSesion = `${AbstractService.BASE_URL}/session`;
 
     constructor(private categoriaService: CategoriaService, private router: Router) {
         let token = window.location.search.substr(1).split("&").map(e => e.split("=")).reduce((x, e) => {
@@ -37,7 +39,7 @@ export class AppComponent implements OnInit {
     logout(event: Event) {
         event.preventDefault();
         window.localStorage.removeItem("token");
-        window.location.replace("/");
+        window.location.assign(process.env.BASE_URL || "http://localhost:8080/");
     }
 
     buscar() {

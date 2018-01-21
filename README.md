@@ -39,6 +39,10 @@ Hay que tener instalado:
 * Google App Engine
 * node.js
 
+## Despliegue en AppEngine
+* `gcloud app deploy --version 1`
+* `gcloud datastore create-indexes index.yaml`
+
 ## Creado a partir de:
 * [node.js][2] - Parte del frontend
 * [Bootstrap 4][3] - Diseño y estrucutra del frontend
