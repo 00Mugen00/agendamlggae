@@ -6,7 +6,8 @@ from models import Evento
 from tokens import get_user_from_token
 from util import parse_date
 from google.appengine.ext import ndb
-from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, obtener_foto_url, clave_evento_o_fallo
+from facades.evento import crear_evento_tipo_usuario, evento_largo_clave, buscar_evento_categorias, obtener_foto_url, \
+    clave_evento_o_fallo
 # Expresiones regulares
 import re
 import flickr
@@ -47,8 +48,8 @@ class EventoHandler(BaseHandler):
         evento.categorias = [ndb.Key(urlsafe=claveURLSafe['id']) for claveURLSafe in
                              evento_from_json.get('categoriaList', [])]
         # Gestionar datos de flickr
-        modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None),
-                             evento_from_json.get('flickrAlbumID', None))
+        modificar_datos_flickr(evento, evento_from_json.get('flickrUserID', None),
+                               evento_from_json.get('flickrAlbumID', None))
 
         # Fijar las coordenadas del evento
         coordenadas_evento = encontrar_coordenadas(evento.direccion)
@@ -59,16 +60,16 @@ class EventoHandler(BaseHandler):
         # Persistir el evento
         crear_evento_tipo_usuario(usuario, evento)
 
-        eventoDic = evento_largo_clave(evento.key, usuario)
+        evento_dic = evento_largo_clave(evento.key, usuario)
 
         # Ponerle su fotoUrl!
-        foto_url = obtener_foto_url(eventoDic)
+        foto_url = obtener_foto_url(evento_dic)
 
         if foto_url is not None:
-            eventoDic['fotoUrl'] = foto_url
+            evento_dic['fotoUrl'] = foto_url
 
         # Devolver evento recien creado completo
-        self.response.write(util.json.to_json(eventoDic))
+        self.response.write(util.json.to_json(evento_dic))
 
     # Obtener todos los eventos existentes en el sistema, es el equivalente a filtrar
     # con un filtro vacio, sirve estando logueado o no
@@ -120,8 +121,8 @@ class EventoHandler(BaseHandler):
         evento.coordenadas = None
 
         # Gestionar datos de flickr
-        modificarDatosFlickr(evento, evento_from_json.get('flickrUserID', None),
-                             evento_from_json.get('flickrAlbumID', None))
+        modificar_datos_flickr(evento, evento_from_json.get('flickrUserID', None),
+                               evento_from_json.get('flickrAlbumID', None))
 
         # Fijar las coordenadas del evento
         coordenadas_evento = encontrar_coordenadas(evento.direccion)
@@ -133,44 +134,45 @@ class EventoHandler(BaseHandler):
         evento.put()
 
         # Se devuelve la version larga del evento
-        eventoDic = evento_largo_clave(evento.key, usuario)
+        evento_dict = evento_largo_clave(evento.key, usuario)
 
         # Ponerle su fotoUrl!
-        foto_url = obtener_foto_url(eventoDic)
+        foto_url = obtener_foto_url(evento_dict)
 
         if foto_url is not None:
-            eventoDic['fotoUrl'] = foto_url
+            evento_dict['fotoUrl'] = foto_url
 
         # Devolver evento recien creado completo
-        self.response.write(util.json.to_json(eventoDic))
+        self.response.write(util.json.to_json(evento_dict))
 
-def modificarDatosFlickr(evento, userId=None, albumId=None):
+
+def modificar_datos_flickr(evento, user_id=None, album_id=None):
     """
     :param evento: ndb.Evento El evento que se va a almacenar en la base de datos
-    :param userId: string id de usuario como cadena que manda el cliente
-    :param albumId: string id de album como cadena proporcionada por el cliente
+    :param user_id: string id de usuario como cadena que manda el cliente
+    :param album_id: string id de album como cadena proporcionada por el cliente
     :return: void
     """
-    if (userId is not None) and (albumId is not None):
-        if not albumId or albumId != evento.flickrAlbumId:
-            evento.flickrAlbumId = albumId
+    if (user_id is not None) and (album_id is not None):
+        if not album_id or album_id != evento.flickrAlbumId:
+            evento.flickrAlbumId = album_id
 
-        if not userId or userId != evento.flickrUserId:
-            evento.flickrUserId = userId
+        if not user_id or user_id != evento.flickrUserId:
+            evento.flickrUserId = user_id
 
             expresion = re.compile('\d+@N\d{2}')
 
-            if userId and not (expresion.match(userId)):
+            if user_id and not (expresion.match(user_id)):
                 # Se obtiene empleando la API de flickr el user ID
-                url_peticion = "http://www.flickr.com/photos/{}/".format(userId)
+                url_peticion = "http://www.flickr.com/photos/{}/".format(user_id)
                 # ID usuario
-                idUsuario = flickr.urls.lookup_user(url_peticion)
+                id_usuario = flickr.urls.lookup_user(url_peticion)
 
-                evento.flickrUserId = idUsuario
+                evento.flickrUserId = id_usuario
 
             if not evento.flickrUserId:
                 # Lanzar excepcion de incidencia con flickr
-                raise AgendamlgException.flickr_username_invalido(userId)
+                raise AgendamlgException.flickr_username_invalido(user_id)
 
 
 class CoordenadasLatLong(BaseHandler):
@@ -188,4 +190,3 @@ class CoordenadasLatLong(BaseHandler):
             'latitud': coordenadas.lat if coordenadas else None,
             'longitud': coordenadas.lon if coordenadas else None
         }))
-

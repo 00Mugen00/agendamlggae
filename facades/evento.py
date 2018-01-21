@@ -271,7 +271,7 @@ def evento_corto(evento, adjuntar_datos_flickr=False):
 
     retorno = {'descripcion': truncar.trunc(evento.descripcion, max_pos=MAX_CARACTERES_DESCRIPCION),
                'direccion': evento.direccion,
-               'fecha': util.to_utc(evento.fecha).isoformat(),
+               'fecha': evento.fecha.isoformat(),
                'nombre': evento.nombre,
                'precio': evento.precio,
                'id': evento.key.urlsafe()}
