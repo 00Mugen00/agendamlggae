@@ -49,7 +49,7 @@ class ComentarioHandler(BaseHandler):
             }
 
         return to_json([ {u'texto': c.texto,
-                          u'fecha': c.fecha.isoformat(),
+                          u'fecha': u'{}Z'.format(c.fecha.isoformat()),
                           u'creador': creador(c.creador),
                           u'id': c.key.urlsafe()}
                          for c in comentarios ])
