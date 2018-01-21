@@ -20,15 +20,22 @@ MAX_CARACTERES_DESCRIPCION = 150
 
 
 def enviar_correo_interesados(evento):
-    categorias = Categoria.query(Categoria.nombre.IN(evento.categorias)).fetch()
-    send_mail(usuario.buscar_usuarios_preferencias(categorias),
-              u'Hay un evento que te puede gustar',
-              evento.nombre + u' es un evento de tu preferencia')
+    categorias = Categoria.query(Categoria.key.IN(evento.categorias)).fetch()
+    usuarios = usuario.buscar_usuarios_preferencias(categorias)
+    send_mail([ util.from_json(_usuario.extra)[u'emails'][0][u'value'] for _usuario in usuarios ],
+              u'Hay un evento que te puede gustar - Agendamlggae',
+              u'''{} es un evento de tu preferencias. Es nuevo y puede que te interese.
+              https://agendamlggae-amjm.appspot.com/verEvento/{}
+              '''.format(evento.nombre, evento.key.urlsafe()))
 
 
 def enviar_correo_creador(evento, creador):
-    usuarios = [creador]
-    send_mail(usuarios, u'Tu evento ha sido publicado', u'El evento ' + evento.nombre + u' ha sido publicado')
+    usuarios = [ util.from_json(creador.extra)[u'emails'][0][u'value'] ]
+    send_mail(usuarios,
+              u'Tu evento {} ha sido publicado'.format(evento.nombre),
+              u'''El evento {} ha sido publicado. Puedes verlo aqui:
+              https://agendamlggae-amjm.appspot.com/verEvento/{}'''
+              .format(evento.nombre, evento.key.urlsafe()))
 
 
 def crear_evento_tipo_usuario(usuario, evento):

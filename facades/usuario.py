@@ -21,7 +21,7 @@ def buscar_usuarios_preferencias(categorias=None):
 
         claves_categorias = map(lambda c: c.key, categorias)
         print claves_categorias
-        resultado = Usuario.query(Usuario.preferencias.IN(claves_categorias)).fetch(projection=[Usuario.idGoogle, Usuario.tipo])
+        resultado = Usuario.query(Usuario.preferencias.IN(claves_categorias)).fetch()
         return resultado
 
     else:
