@@ -5,6 +5,7 @@ import urllib
 import urllib2
 import collections
 import util.json
+import logging
 
 from google.appengine.api import memcache
 
@@ -22,6 +23,7 @@ def do_request(method, params):
 
     memcache_value = memcache.get(u'flickr:{}'.format(url))
     if memcache_value:
+        logging.info(u'Flickr request is cached "flickr:{}"'.format(url))
         return util.json.from_json(memcache_value)
 
     req = urllib2.Request(API_URL + url)
@@ -31,6 +33,7 @@ def do_request(method, params):
     res.close()
     res_json = res_json[14:-1]
     parsed = util.json.from_json(res_json)
+    logging.info(u'Flickr request cached "flickr:{}"'.format(url))
     memcache.set(u'flickr:{}'.format(url), res_json, time=MINUTES_CACHE_DURATION*60)
     return parsed
 

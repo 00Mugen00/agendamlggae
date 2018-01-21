@@ -8,42 +8,46 @@ from Queue import Queue
 
 
 class ParallelTasks(object):
-    queue = None
+    def __init__(self):
+        self.queue = None
+        self.threads = []
+        self.no_more_tasks = False
 
-    @staticmethod
-    def do_work():
+    def do_work(self):
         """ Does some work """
-        while True:
-            func, args = ParallelTasks.queue.get()
+        while not self.no_more_tasks:
+            func, args = self.queue.get()
             func(*args)
-            ParallelTasks.queue.task_done()
+            self.queue.task_done()
 
-    @staticmethod
-    def end_work():
-        if ParallelTasks.queue:
-            ParallelTasks.queue.join()
-            ParallelTasks.queue = None
+    def wait_ending(self):
+        """ Waits until all tasks are completed """
+        if self.queue:
+            self.queue.join()
+            self.no_more_tasks = True
 
-    @staticmethod
-    def start_work(threads=10):
-        if not ParallelTasks.queue:
-            ParallelTasks.queue = Queue()
-            for _ in range(threads):
-                thread = Thread(target=ParallelTasks.do_work)
+            @self.async_call
+            def nothing(): pass
+            [ nothing() for _ in self.threads ]
+            self.queue.join()
+            self.queue = None
+            [ thread.join() for thread in self.threads ]
+
+    def __start_work(self, threads=10):
+        if not self.queue:
+            self.queue = Queue()
+            self.threads = []
+            self.no_more_tasks = False
+            for i in range(threads):
+                thread = Thread(target=self.do_work)
                 thread.daemon = True
                 thread.start()
+                self.threads.append(thread)
 
+    def async_call(self, func):
+        """ Decorator that sends a task in background when the funcion with it is called """
+        self.__start_work()
 
-def async_call(func):
-    """ Decorator that makes a function to be run in parallel when called """
-    ParallelTasks.start_work()
-
-    def call(*args):
-        ParallelTasks.queue.put((func, args))
-    return call
-
-
-def wait_tasks():
-    """ Waits until all current tasks are completed """
-    if ParallelTasks.queue:
-        ParallelTasks.queue.join()
+        def call(*args):
+            self.queue.put((func, args))
+        return call

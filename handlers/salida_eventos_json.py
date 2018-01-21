@@ -39,7 +39,9 @@ def lista_eventos_diccionario(eventos=None, version_corta=True):
         eventos_dic = [evento_largo(ev) for ev in eventos]
 
     # Una vez hecho esto toca, de forma paralela, fijar el atributo fotoUrl de los eventos
-    @util.async_call
+    parallel = util.ParallelTasks()
+
+    @parallel.async_call
     def foto_asincrono(evento):
         foto_url = obtener_foto_url(evento)
         if foto_url is not None:
@@ -51,6 +53,6 @@ def lista_eventos_diccionario(eventos=None, version_corta=True):
             evento.pop('flickrUserID', None)
 
     [foto_asincrono(event) for event in eventos_dic]
-    util.wait_tasks()
+    parallel.wait_ending()
 
     return eventos_dic
