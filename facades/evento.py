@@ -49,7 +49,9 @@ def crear_evento_tipo_usuario(usuario, evento):
 
     evento.put()
 
-    # enviar_correo_interesados(evento)
+    if usuario.tipo > 1 and usuario.tipo < 4:
+        # Mandar el correo a los usuarios interesados en ese evento
+        enviar_correo_interesados(evento)
 
 
 def buscar_eventos_usuario(usuario, todos):
@@ -189,6 +191,9 @@ def validar_evento(clave_evento):
         evento = ndb.Key(urlsafe=clave_evento).get()
         evento.validado = True
         evento.put()
+        # Mandar correo de validacion y de informacion a usuarios
+        enviar_correo_interesados(evento)
+        enviar_correo_creador(evento, evento.key.get())
 
     except:
         # Si hay una excepcion, se lanza que el evento no se ha encontrado en la agenda o similar
