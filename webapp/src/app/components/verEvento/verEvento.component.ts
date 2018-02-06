@@ -33,6 +33,7 @@ export class VerEventoComponent implements OnInit {
   private usuarioHaComentado: boolean = false;
   private eliminarComentarioBinded = this.eliminarComentario.bind(this);
   private noSirveDeNadaPeroBueno: any;
+  private iframe = false;
 
   constructor(private categoriaService: CategoriaService,
               private eventoService: EventoService,
@@ -45,7 +46,12 @@ export class VerEventoComponent implements OnInit {
                 this.fotosDeEvento = fotosDeEventoVacio();
               }
 
-  ngOnInit(){
+  ngOnInit() {
+    let query = window.location.search.substr(1).split("&").map(e => e.split("=")).reduce((x, e) => {
+      x[e[0]] = e[1];
+      return x;
+    }, {});
+    if(query['iwp']) this.iframe = true;
     this.eventoService.buscarEvento(this.id).subscribe((resultado)=>{
       this.evento = resultado;
       if(localStorage.getItem('token')) {

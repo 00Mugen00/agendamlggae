@@ -13,14 +13,18 @@ export class AppComponent implements OnInit {
     private routerUrl: string;
     private textoBuscar: string = "";
     private urlInicioSesion = `${AbstractService.BASE_URL}/session`;
+    private iframe = false;
 
     constructor(private categoriaService: CategoriaService, private router: Router) {
-        let token = window.location.search.substr(1).split("&").map(e => e.split("=")).reduce((x, e) => {
+        let query = window.location.search.substr(1).split("&").map(e => e.split("=")).reduce((x, e) => {
             x[e[0]] = e[1];
             return x;
-        }, {})["token"];
-        if (token) {
-            window.localStorage.setItem('token', token);
+        }, {});
+        if(query['token']) {
+            window.localStorage.setItem('token', query['token']);
+        }
+        if(query['iwp']) {
+            this.iframe = true;
         }
     }
 

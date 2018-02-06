@@ -26,6 +26,8 @@ def based_on(decorator, service):
                 original_url = self.request.params['url']
             else:
                 original_url = self.request.headers.get('referer')
+            if 'agendamlg-api' in original_url:
+                original_url = '/'
 
             self.response.status_int = 301
             if decorator.has_credentials():

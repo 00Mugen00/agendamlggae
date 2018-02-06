@@ -1,11 +1,20 @@
 <app-mostrarError [errorResponse]="errorResponse"></app-mostrarError>
-<h2><b *ngIf="!evento.validado">*</b> {{ evento.nombre }} <small>por <a routerLink="/perfil/{{ evento.creador }}">{{ nombreCreador }}</a></small></h2>
+<h2>
+    <b *ngIf="!evento.validado">*</b>
+    {{ evento.nombre }}
+    <small>
+        por
+        <a routerLink="/perfil/{{ evento.creador }}" *ngIf="!iframe">{{ nombreCreador }}</a>
+        <span *ngIf="iframe">{{ nombreCreador }}</span>
+    </small>
+</h2>
 
 <div class="row align-items-center">
     <div class="col">
         <p style="font-size: 11px; margin-bottom: 0;">
             <span *ngFor="let categoria of evento.categoriaList">
-                <a routerLink="/buscar/{{ categoria.id }}">{{ categoria.nombre }}</a>
+                <a routerLink="/buscar/{{ categoria.id }}" *ngIf="!iframe">{{ categoria.nombre }}</a>
+                <i *ngIf="iframe">{{ categoria.nombre }}</i>
             </span>
         </p>
     </div>
@@ -51,32 +60,35 @@
     {{ evento.direccion }}
 </p>
 
-<h4>Comentarios</h4>
-<div class="comentarios" *ngIf="comentarios && comentarios.length > 0">
-    <comentario *ngFor="let comentario of comentarios"
-                [comentario]="comentario"
-                [delete]="usuarioId === comentario.creador.id ? eliminarComentarioBinded : null"></comentario>
-</div>
-<div class="comentarios" *ngIf="comentarios && comentarios.length === 0">
-    <p class="lead text-muted text-center">No hay comentarios para este evento</p>
-</div>
-<div class="comentarios" *ngIf="!comentarios">
-    <p class="lead text-muted text-center">Cargando comentarios...</p>
-</div>
-<div class="nuevo-comentario" *ngIf="hayUsuario && !usuarioHaComentado">
-    <div class="form-group">
-        <label for="comentarioTexto" class="font-weight-bold">Añade un comentario al evento</label>
-        <textarea id="comentarioTexto" name="comentarioTexto" #comentarioTexto class="form-control" [(ngModel)]="noSirveDeNadaPeroBueno"></textarea>
+<div *ngIf="!iframe">
+    <h4>Comentarios</h4>
+    <div class="comentarios" *ngIf="comentarios && comentarios.length > 0">
+        <comentario *ngFor="let comentario of comentarios"
+                    [comentario]="comentario"
+                    [delete]="usuarioId === comentario.creador.id ? eliminarComentarioBinded : null"></comentario>
     </div>
-    <button class="btn btn-outline-primary btn-sm" (click)="comentar({ texto: comentarioTexto.value })" [disabled]="!noSirveDeNadaPeroBueno">Comentar</button>
-    <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = noSirveDeNadaPeroBueno = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
-</div>
-<div class="nuevo-comentario text-muted text-center" *ngIf="!hayUsuario">
-    Para poder comentar, has de iniciar sesión
+    <div class="comentarios" *ngIf="comentarios && comentarios.length === 0">
+        <p class="lead text-muted text-center">No hay comentarios para este evento</p>
+    </div>
+    <div class="comentarios" *ngIf="!comentarios">
+        <p class="lead text-muted text-center">Cargando comentarios...</p>
+    </div>
+    <div class="nuevo-comentario" *ngIf="hayUsuario && !usuarioHaComentado">
+        <div class="form-group">
+            <label for="comentarioTexto" class="font-weight-bold">Añade un comentario al evento</label>
+            <textarea id="comentarioTexto" name="comentarioTexto" #comentarioTexto class="form-control" [(ngModel)]="noSirveDeNadaPeroBueno"></textarea>
+        </div>
+        <button class="btn btn-outline-primary btn-sm" (click)="comentar({ texto: comentarioTexto.value })" [disabled]="!noSirveDeNadaPeroBueno">Comentar</button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="comentarioTexto.value = noSirveDeNadaPeroBueno = ''" [disabled]="!noSirveDeNadaPeroBueno">Deshacer</button>
+    </div>
+    <div class="nuevo-comentario text-muted text-center" *ngIf="!hayUsuario">
+        Para poder comentar, has de iniciar sesión
+    </div>
+
+    <hr />
 </div>
 
-<hr />
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center" *ngIf="!iframe">
     <a href="#" (click)="validar()" class="btn btn-info" *ngIf="validable">Validar</a>
     <span>&nbsp;</span>
     <a routerLink="/editarEvento/{{ evento.id }}" class="btn btn-warning" *ngIf="editable">Editar</a>
